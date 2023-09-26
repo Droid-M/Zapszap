@@ -6,6 +6,6 @@ WORKDIR /app
 
 COPY src/ /app
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r /app/requirements.txt
 
 CMD [ "python3", "main.py"]
