@@ -23,6 +23,6 @@ if __name__ == '__main__':
     HOST = "localhost"
     PORT = int(file.env("SOCKET_PORT", 8050))
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(HOST, PORT)
+    server_socket.bind((HOST, PORT))
     server_socket.listen(35)
     main()

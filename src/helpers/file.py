@@ -1,6 +1,6 @@
 from pathlib import Path
 
-env_path = Path(__file__).parent.parent.parent.__str__() + '/config.env'
+env_path = Path(__file__).parent.parent.__str__() + '/config.env'
 
 def env(key, default_value = None):
     """Vasculha o arquivo de ambientação ('.env') à procura de alguma chave que corresponda à informada e retorna o valor atribuído a essa chave 
