@@ -4,7 +4,13 @@ from helpers import client_helper
 from helpers import file
 import os
 
-def main():
+HOST = "localhost"
+PORT = int(file.env("SOCKET_PORT", 8050))
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind((HOST, PORT))
+server_socket.listen(35)
+
+def start():
     global server_socket
     try:
         while not os.path.exists("stop.z"):
@@ -18,11 +24,3 @@ def main():
     finally:
         server_socket.close
         print("Servidor encerrado")
-
-if __name__ == '__main__':
-    HOST = "localhost"
-    PORT = int(file.env("SOCKET_PORT", 8050))
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind((HOST, PORT))
-    server_socket.listen(35)
-    main()

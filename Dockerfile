@@ -8,4 +8,4 @@ COPY src/ /app
 
 RUN pip3 install -r /app/requirements.txt
 
-CMD [ "python3", "server.py"]
+CMD [ "python3", "main.py"]
