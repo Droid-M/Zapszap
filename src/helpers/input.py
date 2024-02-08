@@ -1,4 +1,24 @@
 import re
+import socket
+import sys
+import select
+
+def is_data_available():
+    # Verifica se há dados disponíveis na entrada padrão (stdin)
+    return select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], [])
+
+def non_blocking_getch():
+    # Obtém a tecla pressionada sem bloquear
+    if is_data_available():
+        return sys.stdin.read(1)
+    else:
+        return None  # Retorna None se nenhuma tecla foi pressionada
+
+def choice(message: str, input_callable: callable, options: list):
+    ipt = input_callable(message)
+    while ipt not in options:
+        ipt = input_callable("Opção inválida! " + message)
+    return ipt
 
 def input_integer(message):
     """Exige que o usuário insira um valor inteiro enquanto não estiver dentro dos parâmetros esperados"""
@@ -54,3 +74,19 @@ def input_cpf(message):
         print("CPF inválido!")
         # Exige novamente a inserção de um CPF válido
         return input_cpf(message)
+    
+def input_ip(message):
+    ip_address = input(message)
+    try:
+        # Verifica se o endereço IP é válido
+        socket.inet_aton(ip_address)
+
+        # Verifica se o endereço IP possui quatro octetos
+        octetos = ip_address.split('.')
+        if len(octetos) == 4:
+            return ip_address
+        else:
+            raise ValueError("O endereço IP deve ter exatamente quatro octetos.")
+    except (socket.error, ValueError) as e:
+        print(f"Endereço IP inválido: {e}. Tente novamente.\n")
+    return input_ip(message)

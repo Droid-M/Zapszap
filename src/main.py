@@ -1,25 +1,33 @@
-from backend import server
-from frontend import main_menu, event_messages
-from helpers import socket, file
+from helpers import server, client, socket, file, menu
+from services import message_service
+import main_menu
 import threading
+from services import data_service as data_svc
+from multiprocessing import Process, Manager
+from globals import variables
 
-present_network_ips = []
-
-def on_present_device(ip):
-    present_network_ips.append(ip)
-    event_messages.on_present_device_in_network_message(ip)
-
-def on_absent_device(ip):
-    event_messages.on_absent_device_in_network_message(ip)
+CLIENTS = {}
+HOST = "localhost"
+PORT = int(file.env("SOCKET_PORT", 8050))
 
 if __name__ == '__main__':
+    # Restaura as mensagens e contatos anteriores
+    data_svc.restore_data()
+
+    # Sincroniza os dados com outros parceiros
+    data_svc.sync_data()
+
     server_service = threading.Thread(target=server.start)
-    server_service.start(event_messages.waiting_new_connection_message, event_messages.new_client_connected_message, event_messages.socket_server_interrupted_message)
-    event_messages.on_start_ip_search_message()
-    socket.scan_local_network_ips(
-        file.env('IP_RANGE', '192.168.0'),
-        on_present_device,
-        on_absent_device,
-        file.env('MAX_DEVICE_QTY', 255)
-    )
+    server_service.start()
+
+    # Permite que subthreads iniciem:
+    file.delete_file('stop.z', True)
+
+    manager = Manager()
+    variables.INTERPROC_MESSAGES = manager.Queue()
+    messages_terminal = Process(target=message_service.render_messages, args=(variables.INTERPROC_MESSAGES,))
+    messages_terminal.start()
+
     main_menu.show()
+    # Permite que subthreads parem:
+    server.stop()

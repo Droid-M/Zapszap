@@ -1,0 +1,31 @@
+# Use a imagem base fullaxx/ubuntu-desktop
+FROM fullaxx/ubuntu-desktop
+
+LABEL maintainer="Marcos Vinícius (droid-M)"
+
+WORKDIR /app
+
+COPY src/ /app
+
+# Atualize os pacotes
+RUN apt-get update
+
+# Instale o Python 3
+RUN apt-get install -y python3
+
+# Instale o pip para Python 3
+RUN apt-get install -y python3-pip
+
+# Instale o pacote 'kbd' para resolver o erro "No such file or directory: 'dumpkeys'"
+RUN apt-get install -y kbd
+
+# Instale as dependências de desenvolvimento
+RUN apt-get install -y libffi-dev libssl-dev libx11-dev locales
+
+# Limpe o cache de pacotes e diretórios temporários
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install -r /app/requirements.txt
+
+CMD [ "python3", "main.py"]

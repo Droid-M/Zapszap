@@ -1,7 +1,9 @@
 {
     "cSpell.words": [
+        "getch",
         "gethostbyaddr",
         "herror",
+        "INTERPROC",
         "Zapszap"
     ]
 }
