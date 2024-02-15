@@ -58,7 +58,7 @@ def create_file(file_relative_path, content = '', quiet = False):
 
 def log(file_relative_path: str, message: str):
     timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-    directory, file = split_path(BASE_PATH + '/logs/' + file_relative_path)
+    directory = BASE_PATH + '/logs/'
     os.makedirs(directory, exist_ok=True)
     with open(BASE_PATH + '/logs/' + file_relative_path, "a"):
         pass

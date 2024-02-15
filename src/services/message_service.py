@@ -19,34 +19,27 @@ def render_messages(shared_messages):
 def clear_keyboard_buffer():
     # while keyboard.is_pressed(''):
     #     keyboard.read_event()
+    time.sleep(0.5)
     sys.stdin.flush()
 
 def see_chat():
-    # message = variables.Message(MY_IP, '1234', 'mensagem de teste')
-    # variables.INTERPROC_MESSAGES.put(message)
-    # print("Mensagem visualizada")
     old_messages = None
-    # while input("insira Y para continuar no loop: ").lower() == 'y':
-    press_lock = False
+    last_key_state = False  # Estado da tecla "T" na última iteração do loop
     while not keyboard.is_pressed('esc'): 
         if old_messages != messageDAO.to_json():
             menu.clear_console()
-            print("Exibindo mensagens... Pressione ESC para voltar ou T para escrever uma mensagem")
+            print("\nExibindo mensagens... Pressione ESC para voltar ou T para escrever uma mensagem\n")
             for msg in variables.MESSAGES:
                 print(msg.__str__())
             old_messages = messageDAO.to_json()
-        if keyboard.is_pressed("t") and not press_lock:
-            press_lock = True
+    
+        key_state = keyboard.is_pressed("t")
+        if key_state and not last_key_state:
             clear_keyboard_buffer()
             send_group_message()
-        time.sleep(0.1)
-        press_lock = False
-        clear_keyboard_buffer()
-
-    # while InputHelper.non_blocking_getch() != "esc":
-        # if len(old_messages) != len(variables.MESSAGES):
-        #     print(str(messageDAO.get_last_message()))
-        #     old_messages = variables.MESSAGES
+            print("\nExibindo mensagens... Pressione ESC para voltar ou T para escrever uma mensagem\n")
+        last_key_state = key_state
+    clear_keyboard_buffer()
 
 def send_group_message():
     destiny = partnerDAO.get_me().next_partner
@@ -59,7 +52,8 @@ def send_group_message():
         messages = key.encrypt_message(json.dumps(messageDAO.to_list_of_dicts()), destiny.public_key)
         msg = key.encrypt_message(msg, destiny.public_key)
         print("Enviando mensagem...")
-        result = socket.send_message_to_partner(destiny, {'code': 'Zx11', "from": MY_IP, 'new_message': msg, 'messages_list': messages})
+        if not socket.send_message_to_online_partner(destiny, {'code': 'Zx11', "from": MY_IP, 'new_message': msg, 'messages_list': messages, "sender": partnerDAO.get_me().name}):
+            print("\nFalha ao enviar mensagem! Aparentemente, nenhum parceiro está online no momento. Tente mais tarde.\n\n")
     else:
         print("\nVocê não faz parte de nenhum grupo! Para enviar mensagens, é necessário se conectar com alguém.\n")
     data_service.backup_data()

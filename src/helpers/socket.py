@@ -1,9 +1,8 @@
-import socket
 import json
 from models.partner import Partner
-from helpers import client, key, file
-from helpers import type as typeHelper
-import base64
+from helpers import client, file
+from globals.variables import MY_IP
+import traceback
 
 def send_message(client_socket, message: str):
     client_socket.send(message.encode('utf-8') if isinstance(message, str) else message)
@@ -36,5 +35,23 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
         partner.socket = None
         return True
     except Exception as e:
-        print(f"Erro ao enviar mensagem para {partner.socket}. Erro: {e}. Por favor, verifique sua conexão e tente novamente.")
+        file.log('error.log', traceback.format_exc())
         return False
+    
+def send_message_to_online_partner(destiny: Partner, message, is_json = True, stop_if_me = True):
+    # Busca o próximo parceiro online no anel:
+    while destiny.is_offline and destiny.next_partner is not None:
+        destiny = destiny.next_partner
+    
+    if stop_if_me and destiny.host == MY_IP:
+        return True
+    
+    # Tenta enviar mensagem para o próximo parceiro online no anel:
+    successful = send_message_to_partner(destiny, message, is_json)
+    while not successful and (destiny.next_partner is not None):
+        # destiny.is_offline = True
+        destiny = destiny.next_partner
+        if stop_if_me and destiny.host == MY_IP:
+            return True
+        successful = send_message_to_partner(destiny, message, is_json)
+    return successful

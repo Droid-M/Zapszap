@@ -4,7 +4,7 @@ import json
 
 MESSAGES_COUNTER = 0
 
-def register(host: str, content: str, id = None):
+def register(host: str, content: str, sender_name: str = "", id = None):
     global MESSAGES_COUNTER
     for msg in variables.MESSAGES:
         if int(msg.id) >= MESSAGES_COUNTER:
@@ -18,7 +18,7 @@ def register(host: str, content: str, id = None):
         id = 0
     MESSAGES_COUNTER = max(MESSAGES_COUNTER + 1, id)
     old_messages = variables.MESSAGES.copy()
-    new_message = Message(host, MESSAGES_COUNTER, content)
+    new_message = Message(host, MESSAGES_COUNTER, content, sender_name)
     old_messages.append(new_message)
     variables.MESSAGES = sorted(old_messages, key=lambda msg: (msg.id))
     return new_message
@@ -58,7 +58,8 @@ def from_list_of_dicts(json_data: list[dict]) -> list[Message]:
         host = message_data.get("host", "")
         msg_id = message_data.get("id", "")
         content = message_data.get("content", "")
-        new_message = Message(host, msg_id, content)
+        sender_name = message_data.get("sender_name", "")
+        new_message = Message(host, msg_id, content, sender_name)
         messages.append(new_message)
     return messages
 

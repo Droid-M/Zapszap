@@ -1,4 +1,4 @@
-from helpers import server, client, socket, file, menu
+from helpers import server, client, socket, file, menu, network
 from services import message_service
 import main_menu
 import threading
@@ -15,10 +15,15 @@ if __name__ == '__main__':
     data_svc.restore_data()
 
     # Sincroniza os dados com outros parceiros
+    print("Sincronizando dados, por favor, aguarde...")
     data_svc.sync_data()
 
-    server_service = threading.Thread(target=server.start)
-    server_service.start()
+    server_thread = threading.Thread(target=server.start)
+    server_thread.start()
+    
+    network_thread = threading.Thread(target=network.check_network)
+    network_thread.daemon = True  # Define a thread como um daemon para que ela termine quando o programa principal terminar
+    network_thread.start()
 
     # Permite que subthreads iniciem:
     file.delete_file('stop.z', True)

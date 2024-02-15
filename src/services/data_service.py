@@ -52,8 +52,6 @@ def restore_data():
 
 # Função para sincronizar dados com outros parceiros
 def sync_data():
-    print("Sincronizando dados, por favor, aguarde...")
-    
     # Obtendo o próximo parceiro e garantindo que não seja o próprio host
     partner = partnerDAO.get_me().next_partner
     if partner is None and not partnerDAO.empty():
@@ -63,11 +61,11 @@ def sync_data():
     
     # Enviando mensagens de sincronização, se houver um parceiro válido
     if partner:
-        socket.send_message_to_partner(partner, {'code': 'Zx01', "new_partner_host": MY_IP})
+        socket.send_message_to_online_partner(partner, {'code': 'Zx01', "new_partner_host": MY_IP})
         time.sleep(3)
         print(".")
         messages = key.encrypt_message(json.dumps(messageDAO.to_list_of_dicts()), partner.public_key)
-        socket.send_message_to_partner(partner, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP,  'messages_list': messages})
+        socket.send_message_to_online_partner(partner, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP,  'messages_list': messages, "sender": partnerDAO.get_me().name})
         time.sleep(3)
         print(".")
     

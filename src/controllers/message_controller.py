@@ -13,7 +13,7 @@ def intercept_messages(data: dict):
     else:
         new_msg = data.get("new_message")
         new_msg = key.decrypt_message(new_msg, PRIVATE_KEY)
-        messageDAO.register(data.get("from"), new_msg)
+        messageDAO.register(data.get("from"), new_msg, data.get("sender"))
 
     # Registra que o usuário recebeu e tratou a mensagem:
     receivers_list: list = data.get("receivers_list", [])    

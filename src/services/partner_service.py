@@ -11,7 +11,7 @@ def close_all_connections():
             client.disconnect_client(partner.socket)
             partner.has_disconnected = True
     
-def forward_message_to_active_member(partner: Partner, data: dict, is_json = True, stop_if_me = False):
+def forward_message_to_active_member(partner: Partner, data: dict, is_json = True, stop_if_me = True):
     receivers_list: list = data.get("receivers_list", [])
     # all_as_received = len(partnerDAO) <= 1 and ((partnerDAO.get_first() is None) or partnerDAO.get_first().host == MY_IP)
     all_as_received = True
@@ -35,32 +35,41 @@ def forward_message_to_active_member(partner: Partner, data: dict, is_json = Tru
     #   1 - O IP de quem deve receber não for o do próprio computador que está enviando
     #   2 - Houver um próximo parceiro na lista para receber a mensagem
     #   3 - O próximo parceiro na lista conseguir receber a mensagem com sucesso
-    while (not stop_if_me or (partner.host != MY_IP)) and (partner is not None) and not socket.send_message_to_partner(partner, data, is_json):
-        partner.is_offline = True
-        partner = partner.next_partner
+    socket.send_message_to_online_partner(partner, data, is_json, stop_if_me)
     
 def start_partner_connection(host):
     partner = Partner(host, int(file.env('DEFAULT_PARTNER_PORT')))
     me = partnerDAO.get_me()
     if socket.send_message_to_partner(partner, {'code': 'Zx01', "new_partner_host": MY_IP, 'new_partner_public_key': me.public_key}):
+        # Aqui, o parceiro irá corresponder enviando seus próprios dados, por isso partnerDAO.get(host) irá retornar a instancia do parceiro com dados atualizados
         TimeHelper.regressive_counter(4)
         partner = partnerDAO.get(host)
+        if (partner is None):
+            print("\nO parceiro não respondeu à sua solicitação!\n")
+            return
         messages = key.encrypt_message(json.dumps(messageDAO.to_list_of_dicts()), partner.public_key)
-        socket.send_message_to_partner(partner, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP,  'messages_list': messages})
+        socket.send_message_to_partner(partner, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP,  'messages_list': messages, "sender": me.name})
         print("Solicitação de conexão enviada com sucesso!")
     else:
         print("Solicitação de conexão falhou!")
 
 def receive_partners_list(partner_chained_list: Partner):
     while partner_chained_list is not None:
-        partnerDAO.register(partner_chained_list.host, partner_chained_list.port, None, partner_chained_list.public_key)
+        partnerDAO.register(
+            partner_chained_list.host, 
+            partner_chained_list.port, 
+            None,
+            partner_chained_list.public_key,
+            partner_chained_list.is_offline,
+            partner_chained_list.name
+        )
         partner_chained_list = partner_chained_list.next_partner
 
 def list_partners():
     current = partnerDAO.get_first()
     file.log("server.log", "listando")
     count = 1
-    if current is None:
+    if current.host == MY_IP and current.next_partner is None:
         print("Nenhum colega atualmente registrado!")
     else:
         print("Colegas conectados: ")

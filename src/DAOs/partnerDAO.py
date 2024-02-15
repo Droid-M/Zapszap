@@ -4,7 +4,7 @@ from globals import variables
 import json
 from models.partner import Partner
 
-def register(host, port, socket = None, public_key: str = None):
+def register(host, port, socket = None, public_key: str = None, is_offline: bool = False, name = ""):
     # global FIRST_PARTNER, PARTNERS
 
     # Verifica se o IP já está na lista
@@ -12,10 +12,11 @@ def register(host, port, socket = None, public_key: str = None):
     if partner is not None:
         if public_key:
             partner.public_key = public_key
+            partner.is_offline = is_offline
         return partner
 
     # Cria uma nova instância de Partner
-    new_partner = variables.Partner(host, port, socket, public_key=public_key)
+    new_partner = variables.Partner(host, port, socket, public_key=public_key, is_offline=is_offline, name=name)
     variables.PARTNERS[host] = new_partner
     # Insere e ordena com base no IP
     if variables.FIRST_PARTNER is None or host < variables.FIRST_PARTNER.host:

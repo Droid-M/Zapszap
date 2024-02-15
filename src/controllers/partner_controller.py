@@ -41,9 +41,10 @@ def remove_partner(data: dict):
 
 def share_partner(data: dict):
     new_partner_host = data.get("new_partner_host")
+    new_partner_name = data.get("new_partner_name")
 
     # Registra o IP da máquina que quer entrar no grupo:
-    partnerDAO.register(new_partner_host, file.env('DEFAULT_PARTNER_PORT'), None, data.get("new_partner_public_key"))
+    partnerDAO.register(new_partner_host, file.env('DEFAULT_PARTNER_PORT'), None, data.get("new_partner_public_key"), False, new_partner_name)
 
     # Registra/mescla a lista de colegas enviados na mensagem:
     first = data.get("first_partner")
@@ -57,6 +58,8 @@ def share_partner(data: dict):
     data["receivers_list"] = receivers_list
 
     me = partnerDAO.get_me()
+
+    me.is_offline = False
 
     data["first_partner"] = partnerDAO.get_first().to_dict()
 

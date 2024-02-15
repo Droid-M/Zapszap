@@ -17,8 +17,8 @@ docker build --progress=tty -t "${IMAGE_NAME}:${IMAGE_TAG}" .
 if [ $? -eq 0 ]; then
     echo "Imagem Docker construída com sucesso: ${IMAGE_NAME}:${IMAGE_TAG}"
 
-    # Executa o contêiner a partir da imagem
-    docker run --privileged -it -v /dev/input:/dev/input "${IMAGE_NAME}:${IMAGE_TAG}"
+    # Executa o contêiner a partir da imagem, mapeando a porta 8050 do host para a porta 8050 do contêiner
+    docker run --privileged -p 8050:8050 -it -v /dev/input:/dev/input "${IMAGE_NAME}:${IMAGE_TAG}"
 else
     echo "Erro ao construir a imagem Docker."
     exit 1

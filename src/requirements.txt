@@ -1,2 +1,4 @@
 keyboard
 cryptography
+requests
+netifaces
