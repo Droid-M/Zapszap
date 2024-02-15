@@ -54,6 +54,11 @@ def send_group_message():
             destiny = destiny.next_partner
     if destiny:
         msg = input("\n\nInforme a mensagem que você deseja enviar: \n")
+        
+        # Remove a letra "t" do início da mensagem, se presente
+        if msg.startswith("t"):
+            msg = msg[1:]
+        
         messages = key.encrypt_message(json.dumps(messageDAO.to_list_of_dicts()), destiny.public_key)
         msg = key.encrypt_message(msg, destiny.public_key)
         print("Enviando mensagem...")
