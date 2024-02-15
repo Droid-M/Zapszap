@@ -3,6 +3,7 @@ from helpers import file, client, socket, time as TimeHelper, key
 from globals.variables import Partner, MY_IP
 from globals import variables
 import json
+from services import data_service
 
 def close_all_connections():
     for i in variables.PARTNERS:
@@ -26,7 +27,7 @@ def forward_message_to_active_member(partner: Partner, data: dict, is_json = Tru
             break
     if all_as_received: # Se todos receberam a mensagem, então não há porque continuar esta tarefa e o fluxo é interrompido
         file.log("server.log", "todos receberam")
-        return
+        return True
     
     # O próximo parceiro a receber a mensagem é o primeiro que ainda não está na lista dos que já receberam:
     partner = partnerDAO.get(host)
@@ -35,7 +36,7 @@ def forward_message_to_active_member(partner: Partner, data: dict, is_json = Tru
     #   1 - O IP de quem deve receber não for o do próprio computador que está enviando
     #   2 - Houver um próximo parceiro na lista para receber a mensagem
     #   3 - O próximo parceiro na lista conseguir receber a mensagem com sucesso
-    socket.send_message_to_online_partner(partner, data, is_json, stop_if_me)
+    return socket.send_message_to_online_partner(partner, data, is_json, stop_if_me)
     
 def start_partner_connection(host):
     partner = Partner(host, int(file.env('DEFAULT_PARTNER_PORT')))
@@ -80,7 +81,10 @@ def list_partners():
             current = current.next_partner
 
 def exit_group():
-    forward_message_to_active_member(partnerDAO.get_first(), {'code': 'Zx02', "host_to_remove": MY_IP})
-    TimeHelper.regressive_counter(4)
-    partnerDAO.reset()
-    print("Solicitação de conexão enviada com sucesso!")
+    if forward_message_to_active_member(partnerDAO.get_first(), {'code': 'Zx02', "host_to_remove": MY_IP}):
+        TimeHelper.regressive_counter(4)
+        partnerDAO.reset()
+        data_service.backup_data()
+        print("Solicitação de desconexão enviada com sucesso!")
+    else:
+        print("Falha ao tentar desconectar-se do grupo! Tente novamente mais tarde.")

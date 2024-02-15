@@ -35,7 +35,7 @@ def show():
             read_input()
         except Exception as e:
             print(f"Ops, algum erro aconteceu :(. Mensagem: {e}")
-            file.log("errors.log", traceback.format_exc())
+            file.log("error.log", traceback.format_exc())
             menu.scroll_console(7)
 
     
