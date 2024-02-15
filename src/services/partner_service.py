@@ -88,7 +88,12 @@ def list_partners():
 
 def exit_group():
     file.log("info.log", "tentando remover meu ip")
-    if forward_message_to_active_member(partnerDAO.get_first(), {'code': 'Zx02', "host_to_remove": MY_IP}):
+    partner = partnerDAO.get_me().next_partner
+    if partner is None:
+        print("Não há outros parceiros associados ao seu grupo!")
+        return
+    
+    if forward_message_to_active_member(partner, {'code': 'Zx02', "host_to_remove": MY_IP}):
         TimeHelper.regressive_counter(4)
         partnerDAO.reset()
         data_service.backup_data()
