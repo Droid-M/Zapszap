@@ -37,6 +37,7 @@ def forward_message_to_active_member(partner: Partner, data: dict, is_json = Tru
     # O próximo parceiro a receber a mensagem é o primeiro que ainda não está na lista dos que já receberam:
     partner = partnerDAO.get(host)
 
+    file.log("info.log", "forward_message_to_active_member para parceiro " + partner.host if partner else "Nenhum?")
     #Enquanto uma dessas condições não forem cumpridas, envie mensagem para o proximo parceiro:
     #   1 - O IP de quem deve receber não for o do próprio computador que está enviando
     #   2 - Houver um próximo parceiro na lista para receber a mensagem
@@ -86,6 +87,7 @@ def list_partners():
             current = current.next_partner
 
 def exit_group():
+    file.log("info.log", "tentando remover meu ip")
     if forward_message_to_active_member(partnerDAO.get_first(), {'code': 'Zx02', "host_to_remove": MY_IP}):
         TimeHelper.regressive_counter(4)
         partnerDAO.reset()

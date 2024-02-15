@@ -47,6 +47,7 @@ def send_message_to_online_partner(destiny: Partner, message, is_json = True, st
         return True
     
     # Tenta enviar mensagem para o próximo parceiro online no anel:
+    file.log("info.log", "send_message_to_online_partner para parceiro " + destiny.host)
     successful = send_message_to_partner(destiny, message, is_json)
     while not successful and (destiny.next_partner is not None):
         # destiny.is_offline = True
@@ -54,4 +55,5 @@ def send_message_to_online_partner(destiny: Partner, message, is_json = True, st
         if stop_if_me and destiny.host == MY_IP:
             return True
         successful = send_message_to_partner(destiny, message, is_json)
+        file.log("info.log", "send_message_to_online_partner para parceiro " + destiny.host)
     return successful
