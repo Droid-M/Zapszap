@@ -25,21 +25,26 @@ def clear_keyboard_buffer():
 def see_chat():
     old_messages = None
     last_key_state = False  # Estado da tecla "T" na última iteração do loop
-    while not keyboard.is_pressed('esc'): 
-        if old_messages != messageDAO.to_json():
+    show_again = False
+    while not keyboard.is_pressed('esc'):
+        if show_again or old_messages != messageDAO.to_json():
             menu.clear_console()
             print("\nExibindo mensagens... Pressione ESC para voltar ou T para escrever uma mensagem\n")
             for msg in variables.MESSAGES:
                 print(msg.__str__())
             old_messages = messageDAO.to_json()
+            show_again = False
     
         key_state = keyboard.is_pressed("t")
         if key_state and not last_key_state:
-            clear_keyboard_buffer()
+            # clear_keyboard_buffer()
             send_group_message()
-            print("\nExibindo mensagens... Pressione ESC para voltar ou T para escrever uma mensagem\n")
+            print("pressione Enter para prosseguir...")
+            time.sleep(0.5)
+            show_again = True
         last_key_state = key_state
-    clear_keyboard_buffer()
+    # clear_keyboard_buffer()
+    menu.clear_console()
 
 def send_group_message():
     destiny = partnerDAO.get_me().next_partner
