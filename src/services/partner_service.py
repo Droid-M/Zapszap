@@ -26,7 +26,7 @@ def forward_message_to_active_member(partner: Partner, data: dict, is_json = Tru
     # if len(receivers_list) >= len(partnerDAO.PARTNERS): # REVIEW - remover esta linha depois
     
     for host in variables.PARTNERS.keys():
-        if host not in receivers_list:
+        if host not in receivers_list and host != MY_IP:
             all_as_received = False
             break
         
