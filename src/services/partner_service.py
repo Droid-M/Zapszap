@@ -14,6 +14,10 @@ def close_all_connections():
     
 def forward_message_to_active_member(partner: Partner, data: dict, is_json = True, stop_if_me = True):
     receivers_list: list = data.get("receivers_list", [])
+    
+    if len(variables.PARTNERS.keys()) <= 0:
+        return False
+    
     # all_as_received = len(partnerDAO) <= 1 and ((partnerDAO.get_first() is None) or partnerDAO.get_first().host == MY_IP)
     all_as_received = True
 
@@ -25,6 +29,7 @@ def forward_message_to_active_member(partner: Partner, data: dict, is_json = Tru
         if host not in receivers_list:
             all_as_received = False
             break
+        
     if all_as_received: # Se todos receberam a mensagem, então não há porque continuar esta tarefa e o fluxo é interrompido
         file.log("server.log", "todos receberam")
         return True
