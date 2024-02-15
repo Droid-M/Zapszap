@@ -40,7 +40,7 @@ def see_chat():
             # clear_keyboard_buffer()
             send_group_message()
             print("pressione Enter para prosseguir...")
-            time.sleep(0.5)
+            time.sleep(1)
             show_again = True
         last_key_state = key_state
     # clear_keyboard_buffer()
