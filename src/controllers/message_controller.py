@@ -22,9 +22,6 @@ def intercept_messages(data: dict):
         receivers_list.append(MY_IP)
     data["receivers_list"] = receivers_list
 
-    file.log("msg.txt", "mensagens recebidas...")
-    file.log("msg.txt", messageDAO.to_json())
-
     data_service.backup_data()
 
     # Envia a mensagem para o próximo colega na lista:
