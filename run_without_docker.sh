@@ -9,5 +9,5 @@ confirmar_execucao() {
 }
 
 confirmar_execucao
-x-terminal-emulator -e "sudo python3 ./src/main.py"
-x-terminal-emulator -e "./auto_pull.sh"
+x-terminal-emulator -e "sudo python3 ./src/main.py" &
+x-terminal-emulator -e "./auto_pull.sh" &
