@@ -23,7 +23,7 @@ def remove_partner(data: dict):
     if host_to_remove != MY_IP:
         removed = partnerDAO.remove(host_to_remove)
     
-    file.log("removed_partner", removed.to_json() if removed else "nada encontrado!")
+    file.log("removed_partner.log", removed.to_json() if removed else "nada encontrado!")
 
     data["first_partner"] = partnerDAO.get_first().to_dict()
     next = partnerDAO.get_me().next_partner
