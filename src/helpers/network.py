@@ -2,6 +2,7 @@ import socket
 import time
 from services import data_service
 from helpers import file
+import main_menu
 
 stayed_offline = False
 
@@ -22,8 +23,10 @@ def check_network():
             if stayed_offline:
                 data_service.sync_data()
                 stayed_offline = False
+                print("\n\nVocê está online novamente\n\n")
+                main_menu.show_options()
         elif not stayed_offline:
             file.log("network.log", "is Offline")
-            print("\nVocê está Offline!\n")
+            print("\n\nVocê está Offline!\n\n")
             stayed_offline = True
         time.sleep(5)  # Verifica a cada 5 segundos

@@ -5,7 +5,7 @@ import traceback
 
 exit_menu = False
 
-def read_input():
+def read_selection():
     global exit_menu
     ipt = InputHelper.choice("Sua escolha: ", InputHelper.input_integer, [1, 2, 3, 4, 5, 6])
     menu.scroll_console()
@@ -23,16 +23,19 @@ def read_input():
     else:
         exit_menu = menu.close(False)
 
+def show_options():
+    print("Zapszap - Versão 1.0\n\n")
+    print(f"Endereço IP da máquina atual: {client.get_local_ip()}")
+    print("\nIndique a opção que deseja selecionar")
+    print("1 - Conectar-se a um colega\n2 - Visualizar chat\n3 - Visualizar lista de colegas\n4 - Sair do grupo\n5 - Sair da aplicação\n6 - Reiniciar aplicação")
+
 def show():
     global exit_menu
     menu.scroll_console()
     while not exit_menu:
         try:
-            print("Zapszap - Versão 1.0\n\n")
-            print(f"Endereço IP da máquina atual: {client.get_local_ip()}")
-            print("\nIndique a opção que deseja selecionar")
-            print("1 - Conectar-se a um colega\n2 - Visualizar chat\n3 - Visualizar lista de colegas\n4 - Sair do grupo\n5 - Sair da aplicação\n6 - Reiniciar aplicação")
-            read_input()
+            show_options()
+            read_selection()
         except Exception as e:
             print(f"Ops, algum erro aconteceu :(. Mensagem: {e}")
             file.log("error.log", traceback.format_exc())
