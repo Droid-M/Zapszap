@@ -5,7 +5,9 @@ from helpers import file, key
 import json
 
 def intercept_messages(data: dict):
-    # Registra as mensagens recebidas
+    # Rgistra as mensagens recebidas
+    file.log("message.log", "intercept_messages")
+    file.log("message.log", json.dumps(data))
     if data.get("merge_messages"):
         messages = json.loads(key.decrypt_message(data.get("messages_list"), PRIVATE_KEY))
         messages = messageDAO.from_list_of_dicts(messages)
