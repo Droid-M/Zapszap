@@ -1,6 +1,7 @@
 from globals import variables
 from globals.variables import Message, MY_IP
 import json
+from helpers import file
 
 MESSAGES_COUNTER = 0
 
@@ -19,6 +20,7 @@ def register(host: str, content: str, sender_name: str = "", id = None):
     MESSAGES_COUNTER = max(MESSAGES_COUNTER + 1, id)
     old_messages = variables.MESSAGES.copy()
     new_message = Message(host, MESSAGES_COUNTER, content, sender_name)
+    
     old_messages.append(new_message)
     variables.MESSAGES = sorted(old_messages, key=lambda msg: (msg.id))
     return new_message

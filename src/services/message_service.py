@@ -47,7 +47,8 @@ def see_chat():
     menu.clear_console()
 
 def send_group_message():
-    destiny = partnerDAO.get_me().next_partner
+    me = partnerDAO.get_me()
+    destiny = me.next_partner
     if destiny is None and not partnerDAO.empty():
         destiny = partnerDAO.get_first()
         while (destiny is not None) and destiny.host == MY_IP:
@@ -59,10 +60,11 @@ def send_group_message():
         if msg.startswith("t"):
             msg = msg[1:]
         
-        messages = key.encrypt_message(json.dumps(messageDAO.to_list_of_dicts()), destiny.public_key)
         msg = key.encrypt_message(msg, destiny.public_key)
+        messageDAO.register(MY_IP, msg, me.name)
         print("Enviando mensagem...")
-        if not socket.send_message_to_online_partner(destiny, {'code': 'Zx11', "from": MY_IP, 'new_message': msg, 'messages_list': messages, "sender": partnerDAO.get_me().name}):
+        messages = key.encrypt_message(messageDAO.to_json(), destiny.public_key)
+        if not socket.send_message_to_online_partner(destiny, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP, 'messages_list': messages, "sender": me.name}):
             print("\nFalha ao enviar mensagem! Aparentemente, nenhum parceiro está online no momento. Tente mais tarde.\n\n")
     else:
         print("\nVocê não faz parte de nenhum grupo! Para enviar mensagens, é necessário se conectar com alguém.\n")
