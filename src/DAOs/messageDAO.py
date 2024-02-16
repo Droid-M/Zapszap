@@ -22,7 +22,7 @@ def register(host: str, content: str, sender_name: str = "", id = None):
     new_message = Message(host, MESSAGES_COUNTER, content, sender_name)
     
     old_messages.append(new_message)
-    variables.MESSAGES = sorted(old_messages, key=lambda msg: (msg.id))
+    variables.MESSAGES = sorted(old_messages, key=lambda msg: int(msg.id))
     return new_message
 
 def empty():
@@ -73,4 +73,4 @@ def merge_messages(new_messages: list[Message]):
     for message in new_messages:
         if msgs_dict.get(message.get_real_id()) is None:
             old_messages.append(message)
-    variables.MESSAGES = sorted(old_messages, key=lambda msg: (msg.id))
+    variables.MESSAGES = sorted(old_messages, key=lambda msg: int(msg.id))
