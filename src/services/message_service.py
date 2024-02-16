@@ -66,6 +66,7 @@ def send_group_message():
         messages = key.encrypt_message(messageDAO.to_json(), destiny.public_key)
         if not socket.send_message_to_online_partner(destiny, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP, 'messages_list': messages, "sender": me.name}):
             print("\nFalha ao enviar mensagem! Aparentemente, nenhum parceiro está online no momento. Tente mais tarde.\n\n")
+            time.sleep(5)
     else:
         print("\nVocê não faz parte de nenhum grupo! Para enviar mensagens, é necessário se conectar com alguém.\n")
     data_service.backup_data()
