@@ -19,4 +19,4 @@ fi
 logs=$(find "$log_path" -type f -name "*.log")
 
 # Abre todos os arquivos .log encontrados no gedit como root, em uma única janela
-pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY gedit --new-window $logs
+pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY featherpad $logs
