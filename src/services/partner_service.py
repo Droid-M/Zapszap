@@ -87,7 +87,7 @@ def list_partners():
             current = current.next_partner
 
 def exit_group():
-    if input("Tem certeza que deseja reiniciar o programa (Insira 'Y' para confirmar)? ").upper() == 'Y':
+    if input("Tem certeza que deseja sair do grupo (Insira 'Y' para confirmar)? ").upper() == 'Y':
         file.log("info.log", "tentando remover meu ip")
         partner = partnerDAO.get_me().next_partner
         if partner is None:
