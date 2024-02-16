@@ -22,7 +22,8 @@ def check_network():
             if stayed_offline:
                 data_service.sync_data()
                 stayed_offline = False
-        else:
+        elif not stayed_offline:
             file.log("network.log", "is Offline")
+            print("\nVocê está Offline!\n")
             stayed_offline = True
         time.sleep(5)  # Verifica a cada 5 segundos
