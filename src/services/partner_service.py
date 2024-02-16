@@ -87,16 +87,19 @@ def list_partners():
             current = current.next_partner
 
 def exit_group():
-    file.log("info.log", "tentando remover meu ip")
-    partner = partnerDAO.get_me().next_partner
-    if partner is None:
-        print("Não há outros parceiros associados ao seu grupo!")
-        return
-    
-    if forward_message_to_active_member(partner, {'code': 'Zx02', "host_to_remove": MY_IP}):
-        TimeHelper.regressive_counter(4)
-        partnerDAO.reset()
-        data_service.backup_data()
-        print("Solicitação de desconexão enviada com sucesso!")
+    if input("Tem certeza que deseja reiniciar o programa (Insira 'Y' para confirmar)? ").upper() == 'Y':
+        file.log("info.log", "tentando remover meu ip")
+        partner = partnerDAO.get_me().next_partner
+        if partner is None:
+            print("Não há outros parceiros associados ao seu grupo!")
+            return
+        
+        if forward_message_to_active_member(partner, {'code': 'Zx02', "host_to_remove": MY_IP}):
+            TimeHelper.regressive_counter(4)
+            partnerDAO.reset()
+            data_service.backup_data()
+            print("Solicitação de desconexão enviada com sucesso!")
+        else:
+            print("Falha ao tentar desconectar-se do grupo! Tente novamente mais tarde.")
     else:
-        print("Falha ao tentar desconectar-se do grupo! Tente novamente mais tarde.")
+        print("Operação cancelada!")
