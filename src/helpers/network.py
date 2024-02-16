@@ -21,9 +21,9 @@ def check_network():
         if is_online():
             file.log("network.log", "is Online")
             if stayed_offline:
+                print("\n\nVocê está online novamente\n\n")
                 data_service.sync_data()
                 stayed_offline = False
-                print("\n\nVocê está online novamente\n\n")
                 main_menu.show_options()
         elif not stayed_offline:
             file.log("network.log", "is Offline")
