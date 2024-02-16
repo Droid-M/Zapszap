@@ -2,7 +2,6 @@ import socket
 import time
 from services import data_service
 from helpers import file
-import main_menu
 
 stayed_offline = False
 
@@ -24,7 +23,6 @@ def check_network():
                 print("\n\nVocê está online novamente\n\n")
                 data_service.sync_data()
                 stayed_offline = False
-                main_menu.show_options()
         elif not stayed_offline:
             file.log("network.log", "is Offline")
             print("\n\nVocê está Offline!\n\n")

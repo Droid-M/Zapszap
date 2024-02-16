@@ -17,7 +17,10 @@ class Message:
         return self.sender_name + " (" + self.host + ") diz: " + self.content
     
     def get_real_id(self):
-        return self.host + self.id
+        return self.id + self.sender_name + self.host
+    
+    def get_hash(self):
+        return str(self.id).rjust(8, '0') + self.sender_name + self.host
     
 def serialize(obj):
     if isinstance(obj, Message):
