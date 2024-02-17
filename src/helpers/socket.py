@@ -29,7 +29,7 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
         if is_json:
             message = json.dumps(message)
             
-        partner.socket.sendTo(message.encode('utf-8') if isinstance(message, str) else message, (partner.host, partner.port))
+        partner.socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (partner.host, partner.port))
         
         while timeout > 0:
             time.sleep(DEFAULT_TIMEOUT / 5)
@@ -63,7 +63,7 @@ def send_message_to_guest(host: str, port: str, message, is_json = True):
         if is_json:
             message = json.dumps(message)
             
-        socket.sendTo(message.encode('utf-8') if isinstance(message, str) else message, (host, port))
+        socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (host, port))
         
         while timeout > 0:
             time.sleep(DEFAULT_TIMEOUT / 5)
