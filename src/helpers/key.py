@@ -1,127 +1,92 @@
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
-import json
+from cryptography.hazmat.primitives import padding as sym_padding
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import os
 import base64
 
-def generate_key_pair():
-    # Gera um par de chaves RSA
+SYMMETRIC_KEY = b'\x00' * 32  # Chave AES de 256 bits preenchida com bytes nulos
+
+
+def encrypt_data_with_rsa(public_key_pem):
+    public_key = serialization.load_pem_public_key(public_key_pem.encode('utf-8'), backend=default_backend())
+    encrypted_data = public_key.encrypt(
+        SYMMETRIC_KEY,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    encrypted_data_base64 = base64.b64encode(encrypted_data).decode('utf-8')
+    return encrypted_data_base64
+
+def generate_rsa_key_pair():
+    # Gerar uma chave RSA para criptografia assimétrica
     private_key = rsa.generate_private_key(
         public_exponent=65537,
         key_size=2048,
         backend=default_backend()
     )
+    public_key = private_key.public_key()
 
-    # Obtém a chave pública em formato PEM
-    public_key = private_key.public_key().public_bytes(
+    # Serializar chaves para formato PEM (para armazenamento ou envio)
+    private_pem = private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    )
+    public_pem = public_key.public_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PublicFormat.SubjectPublicKeyInfo
-    ).decode('utf-8')
+    )
 
-    # Obtém a chave privada em formato PEM
-    private_key_str = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption()
-    ).decode('utf-8')
+    return private_pem.decode('utf-8'), public_pem.decode('utf-8')
 
-    return public_key, private_key_str
+def generate_key_pair():
+    private_key_pem, public_key_pem = generate_rsa_key_pair()
+    return encrypt_data_with_rsa(public_key_pem), private_key_pem
 
-def encrypt_message(message: str, public_key: str):
-    return message
-    try:
-        # Carregar a chave pública
-        public_key_bytes = public_key.encode('utf-8')
-        public_key_obj = serialization.load_pem_public_key(public_key_bytes, backend=default_backend())
 
-        # Criptografar a string JSON
-        ciphertext = public_key_obj.encrypt(
-            message.encode('utf-8'),
-            padding.OAEP(
-                mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                algorithm=hashes.SHA256(),
-                label=None
-            )
+def encrypt_message(data: str, public_key: str):
+    # return message
+    return encrypt_data_with_aes(data)
+
+def decrypt_message(encrypted_message: str, private_key: str, public_key: str):
+    # return encrypted_message
+    decrypted_public_key = decrypt_data_with_rsa(public_key, private_key)
+    return decrypt_data_with_aes(encrypted_message, decrypted_public_key)
+    
+def encrypt_data_with_aes(data):
+    iv = os.urandom(16)  # Vetor de inicialização para AES
+    padder = sym_padding.PKCS7(algorithms.AES.block_size).padder()
+    padded_data = padder.update(data.encode('utf-8')) + padder.finalize()
+    cipher = Cipher(algorithms.AES(SYMMETRIC_KEY), modes.CFB(iv), backend=default_backend())
+    encryptor = cipher.encryptor()
+    ciphertext = encryptor.update(padded_data) + encryptor.finalize()
+    encrypted_iv_base64 = base64.b64encode(iv).decode('utf-8')
+    encrypted_data_base64 = base64.b64encode(ciphertext).decode('utf-8')
+    return encrypted_iv_base64 + encrypted_data_base64
+
+def decrypt_data_with_rsa(encrypted_data, private_key_pem):
+    private_key = serialization.load_pem_private_key(private_key_pem.encode('utf-8'), password=None, backend=default_backend())
+    decrypted_data = private_key.decrypt(
+        base64.b64decode(encrypted_data.encode('utf-8')),
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
         )
+    )
+    return decrypted_data
 
-        # Retornar o JSON criptografado como bytes
-        return base64.b64encode(ciphertext).decode('utf-8')
-    except Exception as e:
-        print(f"Erro ao carregar a chave pública: {e}")
-        print(f"Chave Pública: {public_key}")
-        print(f"Mensagem: {message}")
-        raise e
-        return None
-
-def decrypt_message(encrypted_message, private_key: str):
-    return encrypted_message
-    try:
-        encrypted_message = base64.b64decode(encrypted_message)
-        # Carregar a chave privada
-        private_key_bytes = private_key.encode('utf-8')
-        private_key_obj = serialization.load_pem_private_key(private_key_bytes, password=None, backend=default_backend())
-
-        # Descriptografar o JSON
-        decrypted_data = private_key_obj.decrypt(
-            encrypted_message,
-            padding.OAEP(
-                mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                algorithm=hashes.SHA256(),
-                label=None
-            )
-        )
-
-        # Converter os bytes descriptografados de volta para a string JSON
-        decrypted_json = json.loads(decrypted_data.decode('utf-8'))
-
-        return decrypted_json
-    except Exception as e:
-        return encrypted_message.decode()
-
-# def decrypt_json_message(cipher_text, private_key):
-#     n, d = private_key
-#     # Convertendo bytes para string
-#     cipher_text_str = cipher_text.decode('utf-8')
-#     # Tentando analisar a string como JSON
-#     try:
-#         json_data = json.loads(cipher_text_str)
-#         # Se bem-sucedido, retornar o JSON
-#         return json_data
-#     except json.JSONDecodeError:
-#         # Se falhar, continuar com a descriptografia
-#         pass
-
-#     # Separando os números da string
-#     cipher_numbers = cipher_text_str.split()
-#     # Decifrando cada número
-#     decrypted_text = ''.join([chr(pow(int(char), d, n)) for char in cipher_numbers])
-    # return decrypted_text
-
-
-def mask_message(message, key):
-    encrypted = []
-
-    for i in range(len(message)):
-        # Aplica o operador XOR para cada caractere da mensagem e da chave
-        encrypted_char = chr(ord(message[i]) ^ ord(key[i % len(key)]))
-        encrypted.append(encrypted_char)
-
-    # Converte a mensagem cifrada para representação hexadecimal
-    encrypted_hex = ''.join([format(ord(char), 'x') for char in encrypted])
-
-    return encrypted_hex
-
-def unmask_message(encrypted_hex, key):
-    # Converte a representação hexadecimal de volta para a mensagem cifrada
-    encrypted = [chr(int(encrypted_hex[i:i+2], 16)) for i in range(0, len(encrypted_hex), 2)]
-
-    decrypted = []
-
-    for i in range(len(encrypted)):
-        # Aplica o operador XOR inverso para cada caractere da mensagem cifrada e da chave
-        decrypted_char = chr(ord(encrypted[i]) ^ ord(key[i % len(key)]))
-        decrypted.append(decrypted_char)
-
-    # Retorna a mensagem decifrada como uma string
-    return ''.join(decrypted)
+def decrypt_data_with_aes(encrypted_data, key):
+    iv = base64.b64decode(encrypted_data[:24])  # IV tem tamanho fixo de 16 bytes (24 bytes após codificação base64)
+    ciphertext = base64.b64decode(encrypted_data[24:])
+    cipher = Cipher(algorithms.AES(key), modes.CFB(iv), backend=default_backend())
+    decryptor = cipher.decryptor()
+    decrypted_data = decryptor.update(ciphertext) + decryptor.finalize()
+    unpadder = sym_padding.PKCS7(algorithms.AES.block_size).unpadder()
+    unpadded_data = unpadder.update(decrypted_data) + unpadder.finalize()
+    return unpadded_data.decode('utf-8')
