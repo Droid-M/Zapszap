@@ -129,6 +129,7 @@ def get_my_next_partner():
         partner = get_first()
         while (partner is not None) and partner.host == variables.MY_IP:
             partner = partner.next_partner
-    if partner.next_partner and (partner.next_partner.host == partner.host) and partner.host == variables.MY_IP:
+    
+    if (partner and partner.next_partner) and (partner.next_partner.host == partner.host) and partner.host == variables.MY_IP:
         return None
     return partner
