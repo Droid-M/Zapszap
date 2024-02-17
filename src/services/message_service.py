@@ -44,7 +44,7 @@ def see_chat():
 
 def send_group_message():
     if not network.is_online():
-        print("\nVerifique se você está conetado(a) à internet e tente novamente!\n")
+        print("\nVerifique se você está conectado(a) à internet e tente novamente!\n")
         time.sleep(5)
         return
     me = partnerDAO.get_me()
