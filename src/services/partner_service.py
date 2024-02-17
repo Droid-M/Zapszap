@@ -1,4 +1,4 @@
-from DAOs import partnerDAO, groupDAO, messageDAO
+from DAOs import partnerDAO, messageDAO
 from helpers import file, client, socket, time as TimeHelper, key
 from globals.variables import Partner, MY_IP
 from globals import variables
