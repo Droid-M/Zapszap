@@ -66,8 +66,8 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
             raise e
         
         if is_json:
-            message = json.dumps(message)
             message["TS"] = timestamp
+            message = json.dumps(message)
             
         socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (host, port))
         
