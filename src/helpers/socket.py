@@ -4,7 +4,7 @@ from helpers import client, file
 from globals.variables import MY_IP
 import traceback
 import time
-from globals.methods import get_last_answer_host, set_last_answer_host, remove_last_answer_host
+from globals.methods import get_last_answer_host, remove_last_answer_host
 from DAOs import partnerDAO
 
 DEFAULT_TIMEOUT = 4

@@ -13,9 +13,12 @@ def get_last_answer_host(timestamp: str):
     return _last_answer_host.get(timestamp)
 
 def set_last_answer_host(host: str, timestamp: str):
+    file.log("answer.log", f"Nova resposta de host: {host} | time: {timestamp}")
     global _last_answer_host
     _last_answer_host[timestamp] = host
     
 def remove_last_answer_host(timestamp: str):
     global _last_answer_host
-    return _last_answer_host.pop(timestamp)
+    host = _last_answer_host.pop(timestamp, None)
+    file.log("answer.log", f"Removendo host: {host} | time: {timestamp}")
+    return host
