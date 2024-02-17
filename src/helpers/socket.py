@@ -32,7 +32,6 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
             timestamp = message.get("TS", str(time.time_ns()))
             message["TS"] = timestamp
             message = json.dumps(message)
-            file.log("socket.log", f"time {timestamp} adicionado")
         
         partner.socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (partner.host, partner.port))
         
@@ -70,7 +69,6 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
             timestamp = message.get("TS", str(time.time_ns()))
             message["TS"] = timestamp
             message = json.dumps(message)
-            file.log("socket.log", f"time {timestamp} adicionado")
             
         socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (host, port))
         
