@@ -4,6 +4,7 @@ from helpers import socket as CustomSocket, file, client
 from controllers import partner_controller, message_controller
 import json
 import traceback
+from globals.methods import set_last_answer_host
 
 LOG_FILE_NAME = 'server.log'
 HOST = client.get_local_ip()
@@ -24,10 +25,15 @@ def handle_request(message, client_address):
                 partner_controller.remove_partner(message)
             elif code == "Zx11":
                 message_controller.intercept_messages(message)
+            elif code == "Zx20":
+                set_last_answer_host(client_address)
         else:
             file.log(LOG_FILE_NAME, client_address + " enviou uma mensagem vazia")
     except Exception as e:
         file.log("error.log", traceback.format_exc())
+        
+def replies_client(client_address):
+    server_socket.sendto(json.dumps({"code": "Zx20"}).encode('utf-8'), client_address)
 
 def start():
     try:
@@ -37,6 +43,7 @@ def start():
             message, client_address = server_socket.recvfrom(8192)  # Tamanho máximo do datagrama é 8192 bytes
             file.log(LOG_FILE_NAME, f"Mensagem recebida de {client_address}: {message}")
             handle_request(message, client_address)
+            replies_client(client_address)
     except KeyboardInterrupt:
         file.log(LOG_FILE_NAME, "Servidor interrompido pelo usuário.")
     finally:

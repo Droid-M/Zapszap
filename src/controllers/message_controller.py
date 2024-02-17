@@ -1,5 +1,6 @@
 from DAOs import messageDAO, partnerDAO
-from globals.variables import MY_IP, get_private_key
+from globals.variables import MY_IP
+from globals.methods import get_private_key
 from services import partner_service, data_service
 from helpers import file, key
 import json

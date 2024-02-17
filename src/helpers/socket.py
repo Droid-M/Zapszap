@@ -3,6 +3,10 @@ from models.partner import Partner
 from helpers import client, file
 from globals.variables import MY_IP
 import traceback
+import time
+from globals.methods import get_last_answer_host, set_last_answer_host
+
+DEFAULT_TIMEOUT = 4
 
 def send_message(client_socket, message: str):
     client_socket.send(message.encode('utf-8') if isinstance(message, str) else message)
@@ -16,22 +20,35 @@ def receive_json_message(data) -> dict[str, any]:
         raise e
 
 def send_message_to_partner(partner: Partner, message, is_json = True):
-    # if partner.socket:
-    #     client.disconnect_client(partner.socket)
+    timeout = DEFAULT_TIMEOUT
+    successful = False
+    
     try:
         try:
             partner.socket = client.connect_to_server(partner.host, partner.port)
         except Exception as e:
             raise e
+        
         if is_json:
             send_message(partner.socket, json.dumps(message))
         else:
             send_message(partner.socket, message)
+        
+        while timeout > 0:
+            time.sleep(1)
+            if get_last_answer_host() == partner.host:
+                successful = True
+                break
+            timeout -= 1
+        
         client.disconnect_client(partner.socket)
+        set_last_answer_host(None)
         partner.socket = None
-        return True
+        
+        return successful
     except Exception as e:
         file.log('error.log', traceback.format_exc())
+        set_last_answer_host(None)
         return False
     
 def send_message_to_online_partner(destiny: Partner, message, is_json = True, stop_if_me = True):

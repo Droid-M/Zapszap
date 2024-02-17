@@ -1,5 +1,4 @@
 from helpers import input as InputHelper, menu, client, file
-from controllers import group_controller
 from services import partner_service, message_service
 import traceback
 
