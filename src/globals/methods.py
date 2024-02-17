@@ -24,8 +24,9 @@ def set_last_answer_host(host: str, timestamp: str):
     file.write_backup_file(ANSWERS_BACKUP_FILE, json.dumps(_last_answer_host))
     
 def remove_last_answer_host(timestamp: str):
-    _last_answer_host = get_last_answers()
-    host = _last_answer_host.pop(timestamp, None)
-    file.log("answer.log", f"Removendo host: {host} | time: {timestamp}")
-    file.write_backup_file(ANSWERS_BACKUP_FILE, json.dumps(_last_answer_host))
-    return host
+    return
+    # _last_answer_host = get_last_answers()
+    # host = _last_answer_host.pop(timestamp, None)
+    # file.log("answer.log", f"Removendo host: {host} | time: {timestamp}")
+    # file.write_backup_file(ANSWERS_BACKUP_FILE, json.dumps(_last_answer_host))
+    # return host
