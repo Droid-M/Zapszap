@@ -66,7 +66,7 @@ def deserialize_key(key_str: str, is_private):
 
 def connect_to_server(host, port: int):
     port = int(port)
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client_socket.settimeout(5)
     client_socket.connect((host, port))
     return client_socket

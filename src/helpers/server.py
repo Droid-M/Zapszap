@@ -8,14 +8,12 @@ import json
 LOG_FILE_NAME = 'server.log'
 HOST = client.get_local_ip()
 PORT = int(file.env("SOCKET_PORT", 8050))
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_socket.bind((HOST, PORT))
-server_socket.listen(35)
 
-def handle_request(client_socket, client_ip):
-    message = None
+def handle_request(message, client_address):
     try:
-        message = CustomSocket.receive_json_message(client_socket)
+        message = CustomSocket.receive_json_message(message)
         file.log(LOG_FILE_NAME, "Mensagem recebida: ")
         file.log(LOG_FILE_NAME, json.dumps(message))
         if message:
@@ -27,25 +25,19 @@ def handle_request(client_socket, client_ip):
             elif code == "Zx11":
                 message_controller.intercept_messages(message)
         else:
-            file.log(LOG_FILE_NAME, client_ip + " enviou uma mensagem vazia")
+            file.log(LOG_FILE_NAME, client_address + " enviou uma mensagem vazia")
     except Exception as e:
         file.log(LOG_FILE_NAME, f"Algum erro aconteceu: {e}")
         file.log(LOG_FILE_NAME, f"Conteúdo da msg: {str(message)}")
-    finally:
-        client_socket.close()
-    return message
-        
+
 def start():
-    global server_socket
     try:
-        file.log(LOG_FILE_NAME, f"Servidor iniciado. Aguardando conexões em {HOST}:{PORT}...")
+        file.log(LOG_FILE_NAME, f"Servidor iniciado. Aguardando mensagens em {HOST}:{PORT}...")
         while not file.file_exists('stop.z'):
-            file.log(LOG_FILE_NAME, "Aguardando conexões...")
-            client_socket, client_address = server_socket.accept()
-            file.log(LOG_FILE_NAME, f"Conexão estabelecida com {client_address}")
-            # client_handler = threading.Thread(target=handle_request, args=(client_socket,client_address[0],))
-            # client_handler.start()
-            handle_request(client_socket, client_address[0])
+            file.log(LOG_FILE_NAME, "Aguardando mensagens...")
+            message, client_address = server_socket.recvfrom(8192)  # Tamanho máximo do datagrama é 8192 bytes
+            file.log(LOG_FILE_NAME, f"Mensagem recebida de {client_address}: {message}")
+            handle_request(message, client_address)
     except KeyboardInterrupt:
         file.log(LOG_FILE_NAME, "Servidor interrompido pelo usuário.")
     finally:
@@ -56,9 +48,7 @@ def stop():
     file.create_file('stop.z', '', True)
     file.log(LOG_FILE_NAME, "Parando servidor...")
     time.sleep(1)  # Aguarda um curto período antes de tentar reiniciar
-    loopback_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    loopback_socket.connect((HOST, PORT))
-    loopback_socket.close()
+    server_socket.sendto(b"", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
     time.sleep(1)
     disconnect_server()
     file.log(LOG_FILE_NAME, "Servidor parado.")
