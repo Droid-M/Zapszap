@@ -4,7 +4,7 @@ from helpers import client, file
 from globals.variables import MY_IP
 import traceback
 import time
-from globals.methods import get_last_answer_host, remove_last_answer_host
+from globals import methods
 from DAOs import partnerDAO
 
 DEFAULT_TIMEOUT = 4
@@ -37,11 +37,11 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
         
         while timeout > 0:
             time.sleep(DEFAULT_TIMEOUT / 5)
-            if get_last_answer_host(timestamp) == partner.host:
+            if methods.get_last_answer_host(timestamp) == partner.host:
                 successful = True
                 break
             timeout -= 1
-        file.log("socket.log", f"partner-host: {partner.host}, answer-host: {get_last_answer_host(timestamp)}, time: {timestamp}")
+        file.log("socket.log", f"partner-host: {partner.host}, answer-host: {methods.get_last_answer_host(timestamp)}, time: {timestamp}")
         
         client.disconnect_client(partner.socket)
         partner.socket = None
@@ -51,7 +51,7 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
         file.log('error.log', traceback.format_exc())
         return False
     finally:
-        remove_last_answer_host(timestamp)
+        methods.remove_last_answer_host(timestamp)
 
 def send_message_to_guest(host: str, port: int, message, is_json = True):
     timeout = DEFAULT_TIMEOUT
@@ -73,11 +73,11 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
         
         while timeout > 0:
             time.sleep(DEFAULT_TIMEOUT / 5)
-            file.log("socket.log", f"guest-host: {host}, answer-host: {get_last_answer_host(timestamp)}, time: {timestamp}")
-            if get_last_answer_host(timestamp) == host:
+            if methods.get_last_answer_host(timestamp) == host:
                 successful = True
                 break
             timeout -= 1
+        file.log("socket.log", f"guest-host: {host}, answer-host: {methods.get_last_answer_host(timestamp)}, time: {timestamp}")
         
         client.disconnect_client(socket)
         socket = None
@@ -87,7 +87,7 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
         file.log('error.log', traceback.format_exc())
         return False
     finally:
-        remove_last_answer_host(timestamp)
+        methods.remove_last_answer_host(timestamp)
     
 def send_message_to_online_partner(destiny: Partner, message, is_json = True, stop_if_me = True):
     # Busca o próximo parceiro online no anel:
