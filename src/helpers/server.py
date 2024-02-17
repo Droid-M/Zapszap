@@ -33,6 +33,9 @@ def handle_request(message, client_address):
         file.log("error.log", traceback.format_exc())
         
 def replies_client(client_address):
+    file.log(LOG_FILE_NAME, f"Respondendo à {client_address}...")
+    file.log(LOG_FILE_NAME, json.dumps({"code": "Zx20"}))
+    file.log(LOG_FILE_NAME, json.dumps({"code": "Zx20"}))
     server_socket.sendto(json.dumps({"code": "Zx20"}).encode('utf-8'), client_address)
 
 def start():
