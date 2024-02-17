@@ -106,6 +106,8 @@ def send_message_to_online_partner(destiny: Partner, message, is_json = True, st
         file.log("info.log", "send_message_to_online_partner - Falha ao enviar msg para parceiro " + destiny.host)
         # destiny.is_offline = True
         destiny = destiny.next_partner
+        if destiny is None:
+            destiny = partnerDAO.get_first()
         if stop_if_me and destiny.host == MY_IP:
             return True
         successful = send_message_to_partner(destiny, message, is_json)
