@@ -22,7 +22,7 @@ def handle_request(message, client_address):
         if message:
             code = message.get("code")
             if code == "Zx20":
-                set_last_answer_host(client_ip)
+                set_last_answer_host(client_ip, message.get("TS"))
             else:
                 if code == "Zx01":
                     partner_controller.share_partner(message)

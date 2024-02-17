@@ -4,7 +4,7 @@ from helpers import client, file
 from globals.variables import MY_IP
 import traceback
 import time
-from globals.methods import get_last_answer_host, set_last_answer_host
+from globals.methods import get_last_answer_host, set_last_answer_host, remove_last_answer_host
 from DAOs import partnerDAO
 
 DEFAULT_TIMEOUT = 4
@@ -20,6 +20,7 @@ def receive_json_message(data) -> dict[str, any]:
 def send_message_to_partner(partner: Partner, message, is_json = True):
     timeout = DEFAULT_TIMEOUT
     successful = False
+    timestamp = str(time.time_ns())
     
     try:
         try:
@@ -28,6 +29,7 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
             raise e
         
         if is_json:
+            message["TS"] = timestamp
             message = json.dumps(message)
         
         file.log("info.log", f"{partner.host}:{partner.port}. {'port é do tipo inteiro' if isinstance(partner.port, int) else 'port não é do tipo inteiro'}")
@@ -35,26 +37,27 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
         
         while timeout > 0:
             time.sleep(DEFAULT_TIMEOUT / 5)
-            if get_last_answer_host() == partner.host:
+            if get_last_answer_host(timestamp) == partner.host:
                 successful = True
                 break
             timeout -= 1
-        file.log("socket.log", f"partner-host: {partner.host}, answer-host: {get_last_answer_host()}")
+        file.log("socket.log", f"partner-host: {partner.host}, answer-host: {get_last_answer_host(timestamp)}")
         
         client.disconnect_client(partner.socket)
-        set_last_answer_host(None)
         partner.socket = None
         
         return successful
     except Exception as e:
         file.log('error.log', traceback.format_exc())
-        set_last_answer_host(None)
         return False
+    finally:
+        remove_last_answer_host(timestamp)
 
 def send_message_to_guest(host: str, port: int, message, is_json = True):
     timeout = DEFAULT_TIMEOUT
     successful = False
     socket = None
+    timestamp = str(time.time_ns())
     
     try:
         try:
@@ -64,26 +67,27 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
         
         if is_json:
             message = json.dumps(message)
+            message["TS"] = timestamp
             
         socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (host, port))
         
         while timeout > 0:
             time.sleep(DEFAULT_TIMEOUT / 5)
             file.log("socket.log", f"guest-host: {host}")
-            if get_last_answer_host() == host:
+            if get_last_answer_host(timestamp) == host:
                 successful = True
                 break
             timeout -= 1
         
         client.disconnect_client(socket)
-        set_last_answer_host(None)
         socket = None
         
         return successful
     except Exception as e:
         file.log('error.log', traceback.format_exc())
-        set_last_answer_host(None)
         return False
+    finally:
+        remove_last_answer_host(timestamp)
     
 def send_message_to_online_partner(destiny: Partner, message, is_json = True, stop_if_me = True):
     # Busca o próximo parceiro online no anel:
