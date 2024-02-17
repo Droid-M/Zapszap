@@ -57,23 +57,13 @@ def create_file(file_relative_path, content = '', quiet = False):
             print(f"Ocorreu um erro ao criar o arquivo: {e}")
 
 def log(file_relative_path: str, message: str):
-    timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+    timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%f]")[:-3]
     directory = BASE_PATH + '/logs/'
     os.makedirs(directory, exist_ok=True)
     with open(BASE_PATH + '/logs/' + file_relative_path, "a"):
         pass
     with open(BASE_PATH + '/logs/' + file_relative_path, "a") as log_file:
         log_file.write(f"{timestamp} {message}\n")
-
-# def log(file_relative_path: str, message: str):
-#     timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-#     full_file_path = os.path.join(BASE_PATH, file_relative_path)
-#     directory, file_name = split_path(full_file_path)
-#     os.makedirs(directory, exist_ok=True)
-#     with open(full_file_path, "a"):
-#         pass
-#     with open(full_file_path, "a") as log_file:
-#         log_file.write(f"{timestamp} {message}\n")
 
 def read_backup_file(file_relative_path)-> Union[dict, str, None]:
     file_relative_path = BASE_PATH + '/backups/' + file_relative_path
