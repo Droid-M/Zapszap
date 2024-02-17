@@ -41,7 +41,6 @@ def restore_data():
     # Verificando e gerando um novo par de chaves se necessário
     if private_key is None and private_key is None:
         public_key, private_key = key.generate_key_pair()
-    variables.PRIVATE_KEY = client.serialize_key(private_key, True)
     me.public_key = client.serialize_key(public_key, False)
     
     # Atualizando backups com as chaves e dados modificados

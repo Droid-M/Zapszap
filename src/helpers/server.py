@@ -1,7 +1,6 @@
 import socket
 import time
 from helpers import socket as CustomSocket, file, client
-from globals.variables import GROUPS, PRIVATE_KEY
 from controllers import partner_controller, message_controller
 import json
 import traceback

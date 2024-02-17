@@ -163,3 +163,4 @@ src/backups/*
 !src/backups/_.zap
 src/logs/*
 !src/logs/_.log
+src/stop.z
