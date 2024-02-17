@@ -7,7 +7,7 @@ from cryptography.hazmat.backends import default_backend
 class Partner:
     def __init__(self, host: str, port: int, socket = None, public_key: str = None, is_offline = False, name = ""):
         self.host = host
-        self.port = port
+        self.port = int(port)
         self.socket = socket
         self.has_disconnected = False
         self.next_partner: Optional[Partner] = None
