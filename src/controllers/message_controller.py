@@ -7,6 +7,7 @@ import json
 def intercept_messages(data: dict):
     # Rgistra as mensagens recebidas
     file.log("message.log", "intercept_messages")
+    file.log("message.log", "Merge msgs" if data.get("merge_messages") else "New msg")
     me = partnerDAO.get_me()
     if data.get("merge_messages"):
         messages = json.loads(key.decrypt_message(data.get("messages_list"), PRIVATE_KEY, me.public_key))

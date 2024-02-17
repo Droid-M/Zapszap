@@ -4,6 +4,7 @@ from helpers import socket as CustomSocket, file, client
 from globals.variables import GROUPS, PRIVATE_KEY
 from controllers import partner_controller, message_controller
 import json
+import traceback
 
 LOG_FILE_NAME = 'server.log'
 HOST = client.get_local_ip()
@@ -27,8 +28,7 @@ def handle_request(message, client_address):
         else:
             file.log(LOG_FILE_NAME, client_address + " enviou uma mensagem vazia")
     except Exception as e:
-        file.log(LOG_FILE_NAME, f"Algum erro aconteceu: {e}")
-        file.log(LOG_FILE_NAME, f"Conteúdo da msg: {str(message)}")
+        file.log("error.log", traceback.format_exc())
 
 def start():
     try:
