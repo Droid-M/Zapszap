@@ -31,8 +31,8 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
         if is_json:
             message["TS"] = timestamp
             message = json.dumps(message)
+            file.log("socket.log", f"time {timestamp} adicionado")
         
-        file.log("info.log", f"{partner.host}:{partner.port}. {'port é do tipo inteiro' if isinstance(partner.port, int) else 'port não é do tipo inteiro'}")
         partner.socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (partner.host, partner.port))
         
         while timeout > 0:
@@ -68,6 +68,7 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
         if is_json:
             message["TS"] = timestamp
             message = json.dumps(message)
+            file.log("socket.log", f"time {timestamp} adicionado")
             
         socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (host, port))
         
