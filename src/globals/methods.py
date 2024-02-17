@@ -15,7 +15,10 @@ def get_last_answers():
     return _last_answer_host if _last_answer_host is not None else {}
 
 def get_last_answer_host(timestamp: str):
-    return get_last_answers().get(timestamp)
+    _last_answer_host = get_last_answers()
+    file.log("answer.log", "Respondedores atuais:")
+    file.log("answer.log", json.dumps(_last_answer_host))
+    return _last_answer_host.get(timestamp)
 
 def set_last_answer_host(host: str, timestamp: str):
     file.log("answer.log", f"Nova resposta de host: {host} | time: {timestamp}")
