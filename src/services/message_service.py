@@ -60,7 +60,6 @@ def send_group_message():
         if msg.startswith("t"):
             msg = msg[1:]
         
-        msg = key.encrypt_message(msg, destiny.public_key)
         messageDAO.register(MY_IP, msg, me.name)
         print("Enviando mensagem...")
         messages = key.encrypt_message(messageDAO.to_json(), destiny.public_key)

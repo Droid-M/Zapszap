@@ -10,7 +10,7 @@ def intercept_messages(data: dict):
     file.log("message.log", json.dumps(data))
     me = partnerDAO.get_me()
     if data.get("merge_messages"):
-        messages = json.loads(key.decrypt_message(data.get("messages_list"), PRIVATE_KEY), me.public_key)
+        messages = json.loads(key.decrypt_message(data.get("messages_list"), PRIVATE_KEY, me.public_key))
         messages = messageDAO.from_list_of_dicts(messages)
         messageDAO.merge_messages(messages)
     else:
