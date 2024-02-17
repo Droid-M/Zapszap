@@ -41,7 +41,7 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
                 successful = True
                 break
             timeout -= 1
-        file.log("socket.log", f"partner-host: {partner.host}, answer-host: {get_last_answer_host(timestamp)}")
+        file.log("socket.log", f"partner-host: {partner.host}, answer-host: {get_last_answer_host(timestamp)}, time: {timestamp}")
         
         client.disconnect_client(partner.socket)
         partner.socket = None
@@ -73,7 +73,7 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
         
         while timeout > 0:
             time.sleep(DEFAULT_TIMEOUT / 5)
-            file.log("socket.log", f"guest-host: {host}")
+            file.log("socket.log", f"guest-host: {host}, answer-host: {get_last_answer_host(timestamp)}, time: {timestamp}")
             if get_last_answer_host(timestamp) == host:
                 successful = True
                 break
