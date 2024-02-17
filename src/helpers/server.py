@@ -5,6 +5,7 @@ from controllers import partner_controller, message_controller
 import json
 import traceback
 from globals.methods import set_last_answer_host
+from DAOs import partnerDAO
 
 LOG_FILE_NAME = 'server.log'
 HOST = client.get_local_ip()
@@ -13,30 +14,32 @@ server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_socket.bind((HOST, PORT))
 
 def handle_request(message, client_address):
+    client_ip = client_address[0]
     try:
         message = CustomSocket.receive_json_message(message)
-        file.log(LOG_FILE_NAME, "Mensagem recebida: ")
+        file.log(LOG_FILE_NAME, f"Mensagem recebida de {client_ip}: ")
         file.log(LOG_FILE_NAME, json.dumps(message))
         if message:
             code = message.get("code")
-            if code == "Zx01":
-                partner_controller.share_partner(message)
-            elif code == "Zx02":
-                partner_controller.remove_partner(message)
-            elif code == "Zx11":
-                message_controller.intercept_messages(message)
-            elif code == "Zx20":
-                set_last_answer_host(client_address)
+            if code == "Zx20":
+                set_last_answer_host(client_ip)
+            else:
+                if code == "Zx01":
+                    partner_controller.share_partner(message)
+                elif code == "Zx02":
+                    partner_controller.remove_partner(message)
+                elif code == "Zx11":
+                    message_controller.intercept_messages(message)
+                replies_client(client_ip, True)
         else:
-            file.log(LOG_FILE_NAME, client_address + " enviou uma mensagem vazia")
+            file.log(LOG_FILE_NAME, client_ip + " enviou uma mensagem vazia")
     except Exception as e:
         file.log("error.log", traceback.format_exc())
         
-def replies_client(client_address):
-    file.log(LOG_FILE_NAME, f"Respondendo à {client_address}...")
-    file.log(LOG_FILE_NAME, json.dumps({"code": "Zx20"}))
-    file.log(LOG_FILE_NAME, json.dumps({"code": "Zx20"}))
-    server_socket.sendto(json.dumps({"code": "Zx20"}).encode('utf-8'), client_address)
+def replies_client(client_ip: str, successful: bool):
+    file.log(LOG_FILE_NAME, f"Respondendo à {client_ip}...")
+    file.log(LOG_FILE_NAME, json.dumps({"code": "Zx20", "success": successful}))
+    CustomSocket.send_message_to_guest(client_ip, PORT, {"code": "Zx20", "success": successful})
 
 def start():
     try:
@@ -44,9 +47,7 @@ def start():
         while not file.file_exists('stop.z'):
             file.log(LOG_FILE_NAME, "Aguardando mensagens...")
             message, client_address = server_socket.recvfrom(8192)  # Tamanho máximo do datagrama é 8192 bytes
-            file.log(LOG_FILE_NAME, f"Mensagem recebida de {client_address}: {message}")
             handle_request(message, client_address)
-            replies_client(client_address)
     except KeyboardInterrupt:
         file.log(LOG_FILE_NAME, "Servidor interrompido pelo usuário.")
     finally:
