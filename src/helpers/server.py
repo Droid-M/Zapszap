@@ -20,7 +20,7 @@ def handle_request(message, client_address):
         file.log(LOG_FILE_NAME, f"Mensagem recebida de {client_ip}: ")
         file.log(LOG_FILE_NAME, json.dumps(message))
         if message:
-            code = message.get("code")
+            code = message.get("code") 
             if code == "Zx20":
                 methods.set_last_answer_host(client_ip, message.get("TS"))
             else:
@@ -30,14 +30,14 @@ def handle_request(message, client_address):
                     partner_controller.remove_partner(message)
                 elif code == "Zx11":
                     message_controller.intercept_messages(message)
-                replies_client(client_ip, True)
+                replies_client(client_ip, message.get("TS"), True)
         else:
             file.log(LOG_FILE_NAME, client_ip + " enviou uma mensagem vazia")
     except Exception as e:
         file.log("error.log", traceback.format_exc())
         
-def replies_client(client_ip: str, successful: bool):
-    CustomSocket.send_message_to_guest(client_ip, PORT, {"code": "Zx20", "success": successful})
+def replies_client(client_ip: str, timestamp: str, successful: bool):
+    CustomSocket.send_message_to_guest(client_ip, PORT, {"code": "Zx20", "TS": timestamp, "success": successful})
 
 def start():
     try:

@@ -20,7 +20,7 @@ def receive_json_message(data) -> dict[str, any]:
 def send_message_to_partner(partner: Partner, message, is_json = True):
     timeout = DEFAULT_TIMEOUT
     successful = False
-    timestamp = str(time.time_ns())
+    timestamp = None
     
     try:
         try:
@@ -29,6 +29,7 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
             raise e
         
         if is_json:
+            timestamp = message.get("TS", str(time.time_ns()))
             message["TS"] = timestamp
             message = json.dumps(message)
             file.log("socket.log", f"time {timestamp} adicionado")
@@ -57,7 +58,7 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
     timeout = DEFAULT_TIMEOUT
     successful = False
     socket = None
-    timestamp = str(time.time_ns())
+    timestamp = None
     
     try:
         try:
@@ -66,6 +67,7 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
             raise e
         
         if is_json:
+            timestamp = message.get("TS", str(time.time_ns()))
             message["TS"] = timestamp
             message = json.dumps(message)
             file.log("socket.log", f"time {timestamp} adicionado")
