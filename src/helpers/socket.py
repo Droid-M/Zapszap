@@ -5,6 +5,7 @@ from globals.variables import MY_IP
 import traceback
 import time
 from globals.methods import get_last_answer_host, set_last_answer_host
+from DAOs import partnerDAO
 
 DEFAULT_TIMEOUT = 4
 
@@ -86,20 +87,23 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
     
 def send_message_to_online_partner(destiny: Partner, message, is_json = True, stop_if_me = True):
     # Busca o próximo parceiro online no anel:
-    while destiny.is_offline and destiny.next_partner is not None:
+    while destiny.is_offline:
         destiny = destiny.next_partner
+        if destiny is None:
+            destiny = partnerDAO.get_first()
     
     if stop_if_me and destiny.host == MY_IP:
         return True
     
     # Tenta enviar mensagem para o próximo parceiro online no anel:
-    file.log("info.log", "send_message_to_online_partner para parceiro " + destiny.host)
     successful = send_message_to_partner(destiny, message, is_json)
-    while not successful and (destiny.next_partner is not None):
+    while destiny.is_offline or not successful:
+        file.log("info.log", "send_message_to_online_partner - Falha ao enviar msg para parceiro " + destiny.host)
         # destiny.is_offline = True
         destiny = destiny.next_partner
         if stop_if_me and destiny.host == MY_IP:
             return True
         successful = send_message_to_partner(destiny, message, is_json)
-        file.log("info.log", "send_message_to_online_partner para parceiro " + destiny.host)
+    if successful:
+        file.log("info.log", "send_message_to_online_partner - Êxito ao enviar msg para parceiro " + destiny.host)
     return successful

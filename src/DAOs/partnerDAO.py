@@ -122,3 +122,13 @@ def reset():
 
 def empty():
     return len(variables.PARTNERS) == 0
+
+def get_my_next_partner():
+    partner = get_me().next_partner
+    if partner is None and not empty():
+        partner = get_first()
+        while (partner is not None) and partner.host == variables.MY_IP:
+            partner = partner.next_partner
+    if partner.next_partner and (partner.next_partner.host == partner.host) and partner.host == variables.MY_IP:
+        return None
+    return partner

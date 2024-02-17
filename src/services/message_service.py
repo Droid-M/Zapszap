@@ -48,11 +48,8 @@ def send_group_message():
         time.sleep(5)
         return
     me = partnerDAO.get_me()
-    destiny = me.next_partner
-    if destiny is None and not partnerDAO.empty():
-        destiny = partnerDAO.get_first()
-        while (destiny is not None) and destiny.host == MY_IP:
-            destiny = destiny.next_partner
+    destiny = partnerDAO.get_my_next_partner()
+    
     if destiny:
         msg = input("\n\nInforme a mensagem que você deseja enviar: \n")
         

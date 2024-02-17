@@ -51,12 +51,7 @@ def restore_data():
 
 # Função para sincronizar dados com outros parceiros
 def sync_data():
-    # Obtendo o próximo parceiro e garantindo que não seja o próprio host
-    partner = partnerDAO.get_me().next_partner
-    if partner is None and not partnerDAO.empty():
-        partner = partnerDAO.get_first()
-        while (partner is not None) and partner.host == MY_IP:
-            partner = partner.next_partner
+    partner = partnerDAO.get_my_next_partner()
     
     # Enviando mensagens de sincronização, se houver um parceiro válido
     if partner:
