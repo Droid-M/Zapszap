@@ -1,11 +1,9 @@
 from multiprocessing import Process, Manager
 from DAOs import messageDAO, partnerDAO
 from globals import variables
-from helpers import file, input as InputHelper, menu, socket, key
-from services.partner_service import forward_message_to_active_member
+from helpers import file, network, menu, socket, key
 from services import data_service
 import keyboard
-import json
 import time
 from globals.variables import MY_IP
 import sys
@@ -39,14 +37,16 @@ def see_chat():
         if key_state and not last_key_state:
             # clear_keyboard_buffer()
             send_group_message()
-            print("pressione Enter para prosseguir...")
-            time.sleep(1)
             show_again = True
         last_key_state = key_state
     # clear_keyboard_buffer()
     menu.clear_console()
 
 def send_group_message():
+    if not network.is_online():
+        print("\nVerifique se você está conetado(a) à internet e tente novamente!\n")
+        time.sleep(5)
+        return
     me = partnerDAO.get_me()
     destiny = me.next_partner
     if destiny is None and not partnerDAO.empty():
