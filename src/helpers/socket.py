@@ -55,11 +55,8 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
     finally:
         methods.remove_last_answer_host(timestamp)
 
-def send_message_to_guest(host: str, port: int, message, is_json = True):
-    timeout = DEFAULT_TIMEOUT
-    successful = False
+def send_responde_message(host: str, port: int, message: dict, timestamp: str):
     socket = None
-    timestamp = None
     
     try:
         try:
@@ -67,32 +64,16 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
         except Exception as e:
             raise e
         
-        if is_json:
-            timestamp = message.get("TS", str(time.time_ns()))
-            message["TS"] = timestamp
-            message = json.dumps(message)
+        message["TS"] = timestamp
+        message = json.dumps(message)
             
         file.log("client.log", f"Mensagem enviada para {host}:")
         file.log("client.log", message)
         socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (host, port))
         
-        while timeout > 0:
-            time.sleep(DEFAULT_TIMEOUT / 5)
-            if methods.get_last_answer_host(timestamp) == host:
-                successful = True
-                break
-            timeout -= 1
-        file.log("socket.log", f"guest-host: {host}, answer-host: {methods.get_last_answer_host(timestamp)}, time: {timestamp}")
-        
         client.disconnect_client(socket)
-        socket = None
-        
-        return successful
     except Exception as e:
         file.log('error.log', traceback.format_exc())
-        return False
-    finally:
-        methods.remove_last_answer_host(timestamp)
     
 def send_message_to_online_partner(destiny: Partner, message, is_json = True, stop_if_me = True):
     # Busca o próximo parceiro online no anel:

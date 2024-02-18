@@ -39,7 +39,7 @@ def handle_request(message, client_address):
 def replies_client(client_ip: str, timestamp: str, successful: bool):
     file.log(LOG_FILE_NAME, f"Respondendo à {client_ip}:")
     file.log(LOG_FILE_NAME, json.dumps({"code": "Zx20", "TS": timestamp, "success": successful}))
-    CustomSocket.send_message_to_guest(client_ip, PORT, {"code": "Zx20", "TS": timestamp, "success": successful})
+    CustomSocket.send_responde_message(client_ip, PORT, {"code": "Zx20", "success": successful}, timestamp)
 
 def start():
     try:
