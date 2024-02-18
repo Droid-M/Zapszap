@@ -7,7 +7,7 @@ import time
 from globals import methods
 from DAOs import partnerDAO
 
-DEFAULT_TIMEOUT = 6
+DEFAULT_TIMEOUT = 2
 
 def receive_json_message(data) -> dict[str, any]:
     if not data:
