@@ -24,13 +24,13 @@ def handle_request(message, client_address):
             if code == "Zx20":
                 methods.set_last_answer_host(client_ip, message.get("TS"))
             else:
+                replies_client(client_ip, message.get("TS"), True)
                 if code == "Zx01":
                     partner_controller.share_partner(message)
                 elif code == "Zx02":
                     partner_controller.remove_partner(message)
                 elif code == "Zx11":
                     message_controller.intercept_messages(message)
-                replies_client(client_ip, message.get("TS"), True)
         else:
             file.log(LOG_FILE_NAME, client_ip + " enviou uma mensagem vazia")
     except Exception as e:
