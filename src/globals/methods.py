@@ -12,12 +12,12 @@ def get_private_key():
 
 def get_last_answers():
     _last_answer_host = file.read_backup_file(ANSWERS_BACKUP_FILE)
+    file.log("answer.log", "Respondedores atuais:")
+    file.log("answer.log", json.dumps(_last_answer_host))
     return _last_answer_host if _last_answer_host is not None else {}
 
 def get_last_answer_host(timestamp: str):
     _last_answer_host = get_last_answers()
-    file.log("answer.log", "Respondedores atuais:")
-    file.log("answer.log", json.dumps(_last_answer_host))
     return _last_answer_host.get(timestamp)
 
 def set_last_answer_host(host: str, timestamp: str):
@@ -27,9 +27,9 @@ def set_last_answer_host(host: str, timestamp: str):
     file.write_backup_file(ANSWERS_BACKUP_FILE, json.dumps(_last_answer_host))
     
 def remove_last_answer_host(timestamp: str):
-    return
-    # _last_answer_host = get_last_answers()
+    file.log("answer.log", f"Tentando remover time: {timestamp}")
+    _last_answer_host = get_last_answers()
     # host = _last_answer_host.pop(timestamp, None)
-    # file.log("answer.log", f"Removendo host: {host} | time: {timestamp}")
+    # file.log("answer.log", f"Removeu host: {host} | time: {timestamp}")
     # file.write_backup_file(ANSWERS_BACKUP_FILE, json.dumps(_last_answer_host))
     # return host
