@@ -15,10 +15,15 @@ def render_messages(shared_messages):
             print(str(message))
         
 def clear_keyboard_buffer():
-    # while keyboard.is_pressed(''):
-    #     keyboard.read_event()
+    ipt = ""
+    while True:
+        key = keyboard.read_key()
+        if key == "t":
+            break
+        ipt += key
     time.sleep(0.5)
     sys.stdin.flush()
+    file.log("keyboard.log", f"Buffer antes de enviar mensagem: {ipt}")
 
 def see_chat():
     old_messages = None
@@ -35,11 +40,10 @@ def see_chat():
     
         key_state = keyboard.is_pressed("t")
         if key_state and not last_key_state:
-            # clear_keyboard_buffer()
             send_group_message()
             show_again = True
         last_key_state = key_state
-    # clear_keyboard_buffer()
+    clear_keyboard_buffer()
     menu.clear_console()
 
 def send_group_message():
@@ -51,6 +55,7 @@ def send_group_message():
     destiny = partnerDAO.get_my_next_partner()
     
     if destiny:
+        clear_keyboard_buffer()
         msg = input("\n\nInforme a mensagem que você deseja enviar: \n")
         
         # Remove a letra "t" do início da mensagem, se presente
