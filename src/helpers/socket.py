@@ -72,6 +72,8 @@ def send_message_to_guest(host: str, port: int, message, is_json = True):
             message["TS"] = timestamp
             message = json.dumps(message)
             
+        file.log("client.log", f"Mensagem enviada para {host}:")
+        file.log("client.log", message)
         socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (host, port))
         
         while timeout > 0:
