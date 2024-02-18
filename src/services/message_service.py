@@ -65,4 +65,5 @@ def send_group_message():
             time.sleep(5)
     else:
         print("\nVocê não faz parte de nenhum grupo! Para enviar mensagens, é necessário se conectar com alguém.\n")
+        time.sleep(5)
     data_service.backup_data()
