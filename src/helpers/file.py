@@ -34,7 +34,7 @@ def file_exists(file_path, using_absolute_path = False):
         return os.path.exists(BASE_PATH + '/' + file_path)
     return os.path.exists(file_path)
 
-def delete_file(file_relative_path, quiet = False):
+def delete_file(file_relative_path, quiet = True):
     try:
         os.remove(BASE_PATH + '/' + file_relative_path)
         if not quiet:
@@ -46,7 +46,7 @@ def delete_file(file_relative_path, quiet = False):
         if not quiet:
             print(f"Ocorreu um erro ao excluir o arquivo: {e}")
 
-def create_file(file_relative_path, content = '', quiet = False):
+def create_file(file_relative_path, content = '', quiet = True):
     try:
         with open(BASE_PATH + '/' + file_relative_path, 'w') as file:
             file.write(content)
