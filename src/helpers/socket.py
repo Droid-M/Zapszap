@@ -33,6 +33,8 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
             message["TS"] = timestamp
             message = json.dumps(message)
         
+        file.log("client.log", f"Mensagem enviada para {partner.host}:")
+        file.log("client.log", message)
         partner.socket.sendto(message.encode('utf-8') if isinstance(message, str) else message, (partner.host, partner.port))
         
         while timeout > 0:
