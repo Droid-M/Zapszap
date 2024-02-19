@@ -15,15 +15,7 @@ def render_messages(shared_messages):
             print(str(message))
         
 def clear_keyboard_buffer():
-    ipt = ""
-    while True:
-        key = keyboard.read_key()
-        if key == "t":
-            break
-        ipt += key
-    time.sleep(0.5)
     sys.stdin.flush()
-    file.log("keyboard.log", f"Buffer antes de enviar mensagem: {ipt}")
 
 def see_chat():
     old_messages = None
@@ -32,13 +24,13 @@ def see_chat():
     while not keyboard.is_pressed('esc'):
         if show_again or old_messages != messageDAO.to_json():
             menu.clear_console()
-            print("\nExibindo mensagens... Pressione ESC para voltar ou T para escrever uma mensagem\n")
+            print("\nExibindo mensagens... Pressione ESC para voltar ou Delete para escrever uma mensagem\n")
             for msg in variables.MESSAGES:
                 print(msg.__str__())
             old_messages = messageDAO.to_json()
             show_again = False
     
-        key_state = keyboard.is_pressed("t")
+        key_state = keyboard.is_pressed("delete")
         if key_state and not last_key_state:
             send_group_message()
             show_again = True
