@@ -1,0 +1,14 @@
+version: '3'
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - /dev/input:/dev/input  # Monta o dispositivo de entrada do teclado no contêiner
+      - ./src:/app/src
+      - ./src/backups:/app/backups
+      - ./src/logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    privileged: true  # Concede privilégios adicionais ao contêiner
