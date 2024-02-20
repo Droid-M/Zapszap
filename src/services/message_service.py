@@ -50,10 +50,6 @@ def send_group_message():
         clear_keyboard_buffer()
         msg = input("\n\nInforme a mensagem que você deseja enviar: \n")
         
-        # Remove a letra "t" do início da mensagem, se presente
-        if msg.startswith("t"):
-            msg = msg[1:]
-        
         messageDAO.register(MY_IP, msg, me.name)
         print("Enviando mensagem...")
         messages = key.encrypt_message(messageDAO.to_json(), destiny.public_key)
