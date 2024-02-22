@@ -11,4 +11,6 @@ services:
       - ./src/logs:/app/logs
     environment:
       - PYTHONUNBUFFERED=1
+    ports:
+    - "8050:8050"
     privileged: true  # Concede privilégios adicionais ao contêiner
