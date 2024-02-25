@@ -5,12 +5,23 @@ services:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-      - /dev/input:/dev/input  # Monta o dispositivo de entrada do teclado no contêiner
-      - ./src:/app/src
-      - ./src/backups:/app/backups
-      - ./src/logs:/app/logs
+    - /dev/input:/dev/input  # Monta o dispositivo de entrada do teclado no contêiner
+    - ./src:/app/src
+    - ./src/backups:/app/backups
+    - ./src/logs:/app/logs
+    networks:
+      zap_network:
+        ipv4_address: 172.19.0.5  # Endereço IP único para este contêiner
+    ports:
+      - "8050:8050/udp"  # Mapeamento da porta UDP
     environment:
       - PYTHONUNBUFFERED=1
-    ports:
-    - "8050:8050"
     privileged: true  # Concede privilégios adicionais ao contêiner
+
+networks:
+  zap_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.0.0/24
