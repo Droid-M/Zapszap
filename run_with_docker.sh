@@ -1,4 +1,3 @@
-# docker network create --driver bridge zap_network
-pip install 'urllib3<2'
-docker-compose build
+#!/bin/bash
+
 docker-compose run --rm app
