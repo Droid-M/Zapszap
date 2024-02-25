@@ -10,4 +10,6 @@ confirmar_execucao() {
 
 confirmar_execucao
 
+./reset_and_run.sh
+
 sudo python3 ./src/main.py
