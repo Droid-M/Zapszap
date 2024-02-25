@@ -1,9 +1,8 @@
 from multiprocessing import Process, Manager
 from DAOs import messageDAO, partnerDAO
 from globals import variables
-from helpers import file, network, menu, socket, key
+from helpers import file, network, menu, socket, key, input as InputHelper
 from services import data_service
-import keyboard
 import time
 from globals.variables import MY_IP
 import sys
@@ -18,24 +17,23 @@ def clear_keyboard_buffer():
     sys.stdin.flush()
 
 def see_chat():
-    old_messages = None
-    last_key_state = False  # Estado da tecla "T" na última iteração do loop
-    show_again = False
-    while not keyboard.is_pressed('esc'):
-        if show_again or old_messages != messageDAO.to_json():
-            menu.clear_console()
-            print("\nExibindo mensagens... Pressione ESC para voltar ou Delete para escrever uma mensagem\n")
-            for msg in variables.MESSAGES:
-                print(msg.__str__())
-            old_messages = messageDAO.to_json()
-            show_again = False
+    choice = None
+    while choice != 's':
+        menu.clear_console()
+        choice = input("Insira:\n\tS - Sair\n\tE - Escrever mensagem\n\tL - Ler mensagens\nSua escolha: ").lower()
+        if choice == 's':
+            break
+        elif choice == 'l':
+            if len(variables.MESSAGES):
+                print("\nExibindo mensagens...\n")
+                for msg in variables.MESSAGES:
+                    print(msg.__str__())
+            else:
+                print("\nNão há mensagens disponíveis!\n")
+            input("\nPressione Enter para prosseguir...\n")
     
-        key_state = keyboard.is_pressed("delete")
-        if key_state and not last_key_state:
+        elif choice == 'e':
             send_group_message()
-            show_again = True
-        last_key_state = key_state
-    clear_keyboard_buffer()
     menu.clear_console()
 
 def send_group_message():
