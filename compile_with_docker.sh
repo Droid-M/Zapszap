@@ -3,5 +3,5 @@
 # docker network create --driver bridge zap_network
 pip install 'urllib3<2'
 ./remove_files.sh
-docker-compose build
-docker-compose run --rm app
+docker build -t app .
+docker run --rm --network host app
