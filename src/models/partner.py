@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
 
 class Partner:
-    def __init__(self, host: str, port: int, socket = None, public_key: str = None, is_offline = False, name: str = ""):
+    def __init__(self, host, port: int, socket = None, public_key = None, is_offline = False, name = ""):
         self.host = host
         self.port = int(port)
         self.socket = socket

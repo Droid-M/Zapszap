@@ -56,7 +56,7 @@ def create_file(file_relative_path, content = '', quiet = True):
         if not quiet:
             print(f"ERROR: Ocorreu um erro ao criar o arquivo: {e}")
 
-def log(file_relative_path: str, message: str):
+def log(file_relative_path, message):
     timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%f]")[:-3]
     directory = BASE_PATH + '/logs/'
     os.makedirs(directory, exist_ok=True)

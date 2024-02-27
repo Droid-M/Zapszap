@@ -1,7 +1,7 @@
 import json
 
 class Message:
-    def __init__(self, host: str, id: str, content: str, sender_name: str) -> None:
+    def __init__(self, host, id, content, sender_name) -> None:
         self.host = host
         self.id = str(id)
         self.content = content

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Caminhos completos para as pastas logs e backups
-log_path="$HOME/Documentos/GitHub/Zapszap/src/logs/"
-backup_path="$HOME/Documentos/GitHub/Zapszap/src/backups/"
+log_path="$HOME/Documentos/ZapsShell/src/logs/"
+backup_path="$HOME/Documentos/ZapsShell/src/backups/"
 
 # Função para remover arquivos .log e .zap que não começam com underscore
 remove_logs_and_zaps() {

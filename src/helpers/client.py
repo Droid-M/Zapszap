@@ -26,7 +26,7 @@ def serialize_key(key, is_private):
     #     )
     # return base64.b64encode(key_bytes).decode('utf-8')
 
-def deserialize_key(key_str: str, is_private):
+def deserialize_key(key_str, is_private):
     return key_str
     # key_bytes = base64.b64decode(key_str.encode('utf-8'))
     # if not is_private:

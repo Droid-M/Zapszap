@@ -1,7 +1,7 @@
 from helpers import menu
 from services import partner_service, message_service
 
-def run(command: str, content = None):
+def run(command, content = None):
     command = command.lower()
     if command == 'connect':
         if (not content):

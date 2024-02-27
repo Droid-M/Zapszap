@@ -66,10 +66,10 @@ def sync_data():
         
     print("\nSincronização de dados completa!")
 
-def set_username(name: str):
+def set_username(name):
     partnerDAO.get_me().name = name
     backup_data()
     
-def check_username(name: str):
+def check_username(name):
     me = partnerDAO.get_me()
     return (str(me.name) == '') or name == me.name

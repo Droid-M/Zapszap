@@ -12,8 +12,8 @@ def close_all_connections():
             client.disconnect_client(partner.socket)
             partner.has_disconnected = True
     
-def forward_message_to_active_member(partner: Partner, data: dict, is_json = True, stop_if_me = True):
-    receivers_list: list = data.get("receivers_list", [])
+def forward_message_to_active_member(partner: Partner, data, is_json = True, stop_if_me = True):
+    receivers_list = data.get("receivers_list", [])
     
     if len(variables.PARTNERS.keys()) <= 0:
         return False

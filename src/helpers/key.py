@@ -49,11 +49,11 @@ def generate_key_pair():
     return encrypt_data_with_rsa(public_key_pem), private_key_pem
 
 
-def encrypt_message(data: str, public_key: str):
+def encrypt_message(data, public_key):
     # return message
     return encrypt_data_with_aes(data)
 
-def decrypt_message(encrypted_message: str, private_key: str, public_key: str):
+def decrypt_message(encrypted_message, private_key, public_key):
     # return encrypted_message
     decrypted_public_key = decrypt_data_with_rsa(public_key, private_key)
     return decrypt_data_with_aes(encrypted_message, decrypted_public_key)

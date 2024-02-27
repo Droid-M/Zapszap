@@ -5,7 +5,7 @@ from helpers import file, client, socket, time as TimeHelper
 from globals.variables import Partner, MY_IP
 
 
-def remove_partner(data: dict):
+def remove_partner(data):
     host_to_remove = data.get("host_to_remove")
 
     # Registra/mescla a lista de colegas enviados na mensagem:
@@ -14,7 +14,7 @@ def remove_partner(data: dict):
         partner_service.receive_partners_list(partnerDAO.from_dict(first))
 
     # Registra que o usuário recebeu e tratou a mensagem:
-    receivers_list: list = data.get("receivers_list", [])
+    receivers_list = data.get("receivers_list", [])
     if MY_IP not in receivers_list:
         receivers_list.append(MY_IP)
     data["receivers_list"] = receivers_list
@@ -41,7 +41,7 @@ def remove_partner(data: dict):
     data_service.backup_data()
     partner_service.forward_message_to_active_member(next, data)
 
-def share_partner(data: dict):
+def share_partner(data):
     new_partner_host = data.get("new_partner_host")
     new_partner_name = data.get("new_partner_name")
 
@@ -54,7 +54,7 @@ def share_partner(data: dict):
         partner_service.receive_partners_list(partnerDAO.from_dict(first))
 
     # Registra que o usuário recebeu e tratou a mensagem:
-    receivers_list: list = data.get("receivers_list", [])
+    receivers_list = data.get("receivers_list", [])
     if MY_IP not in receivers_list:
         receivers_list.append(MY_IP)
     data["receivers_list"] = receivers_list

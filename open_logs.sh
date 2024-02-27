@@ -7,7 +7,7 @@ if ! command -v gedit &> /dev/null; then
 fi
 
 # Caminho completo para a pasta logs
-log_path="$HOME/Documentos/GitHub/Zapszap/src/logs/"
+log_path="$HOME/Documentos/ZapsShell/src/logs/"
 
 # Verifica se o diretório existe
 if [ ! -d "$log_path" ]; then

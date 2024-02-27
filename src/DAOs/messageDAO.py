@@ -5,7 +5,7 @@ from helpers import file
 
 MESSAGES_COUNTER = 0
 
-def register(host: str, content: str, sender_name: str = "", id = None):
+def register(host, content, sender_name = "", id = None):
     global MESSAGES_COUNTER
     for msg in variables.MESSAGES:
         if int(msg.id) >= MESSAGES_COUNTER:
@@ -28,7 +28,7 @@ def register(host: str, content: str, sender_name: str = "", id = None):
 def empty():
     return len(variables.MESSAGES) == 0
 
-def messages_groups_are_equals(messagesGp1: dict[Message], messagesGp2: dict[Message]):
+def messages_groups_are_equals(messagesGp1, messagesGp2):
     msgQty = len(messagesGp1)
     if msgQty != len(messagesGp2):
         return False
@@ -54,7 +54,7 @@ def to_list_of_dicts():
         messages.append(message.to_dict())
     return messages
 
-def from_list_of_dicts(json_data: list[dict]) -> list[Message]:
+def from_list_of_dicts(json_data):
     messages = []
     for message_data in json_data:
         host = message_data.get("host", "")
@@ -65,7 +65,7 @@ def from_list_of_dicts(json_data: list[dict]) -> list[Message]:
         messages.append(new_message)
     return messages
 
-def merge_messages(new_messages: list[Message]):
+def merge_messages(new_messages):
     old_messages = variables.MESSAGES.copy()
     msgs_dict = {}
     for message in old_messages:

@@ -6,7 +6,7 @@ from helpers import file
 
 MY_IP = client.get_local_ip()
 FIRST_PARTNER: Optional[Partner] = Partner(MY_IP, file.env('DEFAULT_PARTNER_PORT'), None)
-PARTNERS: dict[str, Partner] = {MY_IP: FIRST_PARTNER}
+PARTNERS = {MY_IP: FIRST_PARTNER}
 FIRST_PART_REFERENCE = [FIRST_PARTNER]
-MESSAGES: list[Message] = []
+MESSAGES = []
 INTERPROC_MESSAGES = None
