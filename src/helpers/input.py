@@ -14,7 +14,7 @@ def non_blocking_getch():
     else:
         return None  # Retorna None se nenhuma tecla foi pressionada
 
-def choice(message: str, input_callable: callable, options: list):
+def choice(message, input_callable: callable, options):
     ipt = input_callable(message)
     while ipt not in options:
         ipt = input_callable("Opção inválida! " + message)

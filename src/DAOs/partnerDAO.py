@@ -4,7 +4,7 @@ from globals import variables
 import json
 from models.partner import Partner
 
-def register(host, port, socket = None, public_key: str = None, is_offline: bool = False, name = ""):
+def register(host, port, socket = None, public_key = None, is_offline: bool = False, name = ""):
     # global FIRST_PARTNER, PARTNERS
 
     # Verifica se o IP já está na lista
@@ -50,7 +50,7 @@ def to_dict():
         partners[i] = variables.PARTNERS[i].to_dict()
     return partners
 
-def from_dict(data: dict) -> variables.Partner:
+def from_dict(data) -> variables.Partner:
     partner_instance = variables.Partner(data.get('host'), data.get('port'), data.get('socket'), data.get("public_key"))
 
     # Define outros atributos conforme necessário
@@ -62,7 +62,7 @@ def from_dict(data: dict) -> variables.Partner:
         partner_instance.next_partner = from_dict(next_partner_data)
     return partner_instance
 
-def from_dict_of_dicts(data: dict): 
+def from_dict_of_dicts(data): 
     partners = {}
     for k, v in data.items():
         partners[k] = from_dict(v)
@@ -77,7 +77,7 @@ def get_first():
     partners_values = PARTNERS.values()
     return next(iter(partners_values)) if partners_values else None
 
-def remove(host: str):
+def remove(host):
     # global FIRST_PARTNER, FIRST_PART_REFERENCE, PARTNERS
 
     current = get_first()

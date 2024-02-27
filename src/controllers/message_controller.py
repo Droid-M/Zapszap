@@ -5,7 +5,7 @@ from services import partner_service, data_service
 from helpers import file, key
 import json
 
-def intercept_messages(data: dict):
+def intercept_messages(data):
     # Rgistra as mensagens recebidas
     file.log("message.log", "intercept_messages")
     file.log("message.log", "Merge msgs" if data.get("merge_messages") else "New msg")
@@ -25,7 +25,7 @@ def intercept_messages(data: dict):
         messageDAO.register(data.get("from"), new_msg, data.get("sender"))
 
     # Registra que o usuário recebeu e tratou a mensagem:
-    receivers_list: list = data.get("receivers_list", [])    
+    receivers_list = data.get("receivers_list", [])    
 
     if MY_IP not in receivers_list:
         receivers_list.append(MY_IP)

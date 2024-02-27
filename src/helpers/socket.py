@@ -55,7 +55,7 @@ def send_message_to_partner(partner: Partner, message, is_json = True):
     finally:
         methods.remove_last_answer_host(timestamp)
 
-def send_response_message(host: str, port: int, message: dict, timestamp: str):
+def send_response_message(host, port: int, message, timestamp):
     socket = None
     
     try:
