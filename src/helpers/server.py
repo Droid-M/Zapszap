@@ -64,7 +64,7 @@ def stop():
         except OSError as e:
             # print(f"ERROR: Erro ao enviar dados: {e}")
             pass
-        time.sleep(1)
+        time.sleep(0.25)
         disconnect_server()
         file.log(LOG_FILE_NAME, "Servidor parado.")
     else:
