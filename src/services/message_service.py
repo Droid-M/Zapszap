@@ -21,9 +21,9 @@ def see_chat():
         print(msg.__str__())
 
 def send_group_message(msg):
-    if not network.is_online():
-        print("ERROR: Você está offline")
-        return
+    # if not network.is_online():
+    #     print("ERROR: Você está offline")
+    #     return
     
     me = partnerDAO.get_me()
     destiny = partnerDAO.get_my_next_partner()
