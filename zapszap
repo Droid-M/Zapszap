@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Verifica se o número de argumentos está correto
+if [ $# -lt 2 ]; then
+    echo "Uso: $0 <destinatario> <comando> [mensagem]"
+    exit 1
+fi
+
+# Executa o comando de acordo com os argumentos fornecidos
+
+# Executa o programa principal com os parâmetros fornecidos
+python3 ./src/main.py "$@"
+
+# Fim do script
