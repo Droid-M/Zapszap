@@ -57,7 +57,7 @@ def start():
 def stop():
      # Verifica se o socket está pronto para uso
     if server_socket:
-        file.create_file('stop.z', '', False)
+        file.create_file('stop.z', '', True)
         file.log(LOG_FILE_NAME, "Parando servidor...")
         time.sleep(0.3)
         try:
