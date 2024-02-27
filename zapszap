@@ -8,6 +8,7 @@ exibir_ajuda() {
     echo "  <user> connect <partner-ip>"
     echo "  <user> list-partners"
     echo "  <user> exit-group"
+    echo "  <user> logoff"
 }
 
 # Verifica se o número de argumentos está correto
@@ -21,7 +22,7 @@ if [ "$#" -lt 2 ]; then
 fi
 
 # Lista de comandos permitidos
-comandos_permitidos=("read-messages" "send-message" "connect" "list-partners" "exit-group")
+comandos_permitidos=("read-messages" "send-message" "connect" "list-partners" "exit-group" "logoff")
 
 # Verifica se o comando fornecido está na lista de comandos permitidos
 comando="$2"

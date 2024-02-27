@@ -99,3 +99,9 @@ def exit_group():
         print("INFO: Solicitação de retirada do grupo enviada!")
     else:
         print("ERROR: Não foi possível enviar a solicitação de saída do grupo!")
+        
+def logoff():
+    partnerDAO.get_me().name = ""
+    partnerDAO.get_me().is_offline = False
+    data_service.backup_data()
+    print("INFO: Desconexão realizada com sucesso! A partir de agora, você pode usar outro username se preferir.")

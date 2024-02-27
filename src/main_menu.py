@@ -15,8 +15,11 @@ def run(command: str, content = None):
         partner_service.exit_group()
     elif command == 'send-message':
         if (not content):
-            exit('ERROR: Conteúdo da mensagem é obrigatório!')
-        message_service.send_group_message(content)
+            print('ERROR: Conteúdo da mensagem é obrigatório!')
+        else:
+            message_service.send_group_message(content)
+    elif command == 'logoff':
+        partner_service.logoff()
     else:
         print("ERROR: Comando inválido!")
         # exit_menu = menu.close(False)
