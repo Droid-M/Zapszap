@@ -38,23 +38,23 @@ def delete_file(file_relative_path, quiet = True):
     try:
         os.remove(BASE_PATH + '/' + file_relative_path)
         if not quiet:
-            print(f"Arquivo {file_relative_path} excluído com sucesso.")
+            print(f"INFO: Arquivo {file_relative_path} excluído com sucesso.")
     except FileNotFoundError:
         if not quiet:
-            print(f"O arquivo {file_relative_path} não foi encontrado.")
+            print(f"ERROR: O arquivo {file_relative_path} não foi encontrado.")
     except Exception as e:
         if not quiet:
-            print(f"Ocorreu um erro ao excluir o arquivo: {e}")
+            print(f"ERROR: Ocorreu um erro ao excluir o arquivo: {e}")
 
 def create_file(file_relative_path, content = '', quiet = True):
     try:
         with open(BASE_PATH + '/' + file_relative_path, 'w') as file:
             file.write(content)
         if not quiet:
-            print(f"Arquivo {file_relative_path} criado com sucesso.")
+            print(f"INFO: Arquivo {file_relative_path} criado com sucesso.")
     except Exception as e:
         if not quiet:
-            print(f"Ocorreu um erro ao criar o arquivo: {e}")
+            print(f"ERROR: Ocorreu um erro ao criar o arquivo: {e}")
 
 def log(file_relative_path: str, message: str):
     timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%f]")[:-3]
@@ -65,7 +65,7 @@ def log(file_relative_path: str, message: str):
     with open(BASE_PATH + '/logs/' + file_relative_path, "a") as log_file:
         log_file.write(f"{timestamp} {message}\n")
 
-def read_backup_file(file_relative_path)-> Union[dict, str, None]:
+def read_backup_file(file_relative_path, quiet = True)-> Union[dict, str, None]:
     file_relative_path = BASE_PATH + '/backups/' + file_relative_path
     try:
         # Verifica se o arquivo .zap existe
@@ -79,12 +79,13 @@ def read_backup_file(file_relative_path)-> Union[dict, str, None]:
                 return json.loads(content)
             return content
         else:
-            print(file_relative_path, "não existe!")
+            if not quiet:
+                print(f"ERROR: {file_relative_path} não existe!")
             # Retorna None se o arquivo não existir
             return None
     except Exception as e:
         # Trata exceções, se houver algum erro
-        print(f"Ocorreu um erro ao ler o arquivo de backup: {e}")
+        print(f"ERROR: Ocorreu um erro ao ler o arquivo de backup: {e}")
         return None
 
 def write_backup_file(file_relative_path, content, quiet=True):
@@ -98,7 +99,7 @@ def write_backup_file(file_relative_path, content, quiet=True):
             file.write(content)
 
         if not quiet:
-            print(f"Arquivo de backup {file_relative_path} gerado com sucesso.")
+            print(f"INFO: Arquivo de backup {file_relative_path} gerado com sucesso.")
     except Exception as e:
         if not quiet:
-            print(f"Ocorreu um erro ao gerar o arquivo de backup: {e}")
+            print(f"INFO: Ocorreu um erro ao gerar o arquivo de backup: {e}")
