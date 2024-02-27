@@ -3,12 +3,11 @@
 # Função para exibir a lista de comandos
 exibir_ajuda() {
     echo "Lista de comandos:"
-    echo "  <user> read-message"
+    echo "  <user> read-messages"
     echo "  <user> send-message <message>"
     echo "  <user> connect <partner-ip>"
     echo "  <user> list-partners"
     echo "  <user> exit-group"
-    echo "  <user> restart"
 }
 
 # Verifica se o número de argumentos está correto
@@ -19,6 +18,17 @@ if [ "$#" -lt 2 ]; then
         echo "Uso: $0 <usuário> <comando> [mensagem]"
         exit 1
     fi
+fi
+
+# Lista de comandos permitidos
+comandos_permitidos=("read-messages" "send-message" "connect" "list-partners" "exit-group")
+
+# Verifica se o comando fornecido está na lista de comandos permitidos
+comando="$2"
+if ! [[ " ${comandos_permitidos[@]} " =~ " ${comando} " ]]; then
+    echo "Erro: Comando '$comando' não reconhecido."
+    exibir_ajuda
+    exit 1
 fi
 
 # Executa o programa principal com os parâmetros fornecidos

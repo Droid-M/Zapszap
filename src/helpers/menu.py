@@ -7,7 +7,7 @@ from helpers import server
 def restart():
     """Reinicia a aplicação"""
     if input("Tem certeza que deseja reiniciar o programa (Insira 'Y' para confirmar)? ").upper() == 'Y':
-        print("Reiniciando programa...")
+        print("INFO: Reiniciando programa...")
         server.stop()
         if os.name == 'nt':
             # Se estiver no Windows, use CREATE_NEW_CONSOLE para executar em um novo terminal CMD
@@ -19,17 +19,17 @@ def restart():
             os.execv(sys.executable if sys.executable else '/usr/bin/python3', ['python'] + sys.argv)
         sys.exit()
     else:
-        print("Operação cancelada!")
+        print("INFO: Operação cancelada!")
 
 def close(force_exit = True):
     """Encerra o programa"""
     if input("Tem certeza que deseja sair do programa (Insira 'Y' para confirmar)? ").upper() == 'Y':
-        print("Saindo do programa...")
+        print("INFO: Saindo do programa...")
         if force_exit:
             exit()
         return True
     else:
-        print("Operação cancelada!")
+        print("INFO: Operação cancelada!")
     return False
 
 def clear_console():

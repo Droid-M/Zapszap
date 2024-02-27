@@ -17,7 +17,7 @@ def non_blocking_getch():
 def choice(message: str, input_callable: callable, options: list):
     ipt = input_callable(message)
     while ipt not in options:
-        ipt = input_callable("Opção inválida! " + message)
+        ipt = input_callable("ERROR: Opção inválida! " + message)
     return ipt
 
 def input_integer(message):
@@ -26,7 +26,7 @@ def input_integer(message):
     try:
         return int(number)
     except ValueError:
-        print("Entrada inválida! Insira apenas valors numéricos inteiros!")
+        print("ERROR: Entrada inválida! Insira apenas valors numéricos inteiros!")
         # Exige novamente a inserção de um valor correto
         return input_integer(message)
     
@@ -36,7 +36,7 @@ def input_number(message):
     try:
         return float(number)
     except ValueError:
-        print("Entrada inválida! Insira apenas valors numéricos!")
+        print("ERROR: Entrada inválida! Insira apenas valors numéricos!")
         # Exige novamente a inserção de um valor correto
         return input_number(message)
 
@@ -46,12 +46,12 @@ def input_cpf(message):
     cpf = re.sub(r'[^0-9]', '', input(message))
 
     if len(cpf) != 11: #Se a quantidade de números não for 11, então o CPF é inválida:
-        print("CPF inválido!")
+        print("ERROR: CPF inválido!")
         # Exige novamente a inserção de um CPF válido
         return input_cpf(message)
 
     if cpf == cpf[0] * 11: # Se os onze dígitos forem 0, então o CPF é inválida:
-        print("CPF inválido!")
+        print("ERROR: CPF inválido!")
         # Exige novamente a inserção de um CPF válido
         return input_cpf(message)
 
@@ -71,7 +71,7 @@ def input_cpf(message):
     if int(cpf[9]) == digit1 and int(cpf[10]) == digit2: # Se o penúltimo e antepenúltimo digito corresponderem à "verificação de paridade", então o CPF é válido:
         return cpf
     else:
-        print("CPF inválido!")
+        print("ERROR: CPF inválido!")
         # Exige novamente a inserção de um CPF válido
         return input_cpf(message)
     
@@ -86,7 +86,7 @@ def input_ip(message):
         if len(octetos) == 4:
             return ip_address
         else:
-            raise ValueError("O endereço IP deve ter exatamente quatro octetos.")
+            raise ValueError("ERROR: O endereço IP deve ter exatamente quatro octetos.")
     except (socket.error, ValueError) as e:
-        print(f"Endereço IP inválido: {e}. Tente novamente.\n")
+        print(f"ERROR: Endereço IP inválido: {e}. Tente novamente.\n")
     return input_ip(message)

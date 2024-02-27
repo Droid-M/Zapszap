@@ -52,13 +52,13 @@ def start_partner_connection(host):
         TimeHelper.regressive_counter(4)
         partner = partnerDAO.get(host)
         if (partner is None):
-            print("\nO parceiro não respondeu à sua solicitação!\n")
+            print("ERROR: O parceiro não respondeu à solicitação!")
             return
         messages = key.encrypt_message(json.dumps(messageDAO.to_list_of_dicts()), partner.public_key)
         socket.send_message_to_partner(partner, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP,  'messages_list': messages, "sender": me.name})
-        print("Solicitação de conexão enviada com sucesso!")
+        print("INFO: Conectado com sucesso!")
     else:
-        print("Solicitação de conexão falhou!")
+        print(f"ERROR: Falha ao enviar mensagem para {host}")
 
 def receive_partners_list(partner_chained_list: Partner):
     while partner_chained_list is not None:
@@ -77,9 +77,8 @@ def list_partners():
     file.log("server.log", "listando")
     count = 1
     if current.host == MY_IP and current.next_partner is None:
-        print("Nenhum colega atualmente registrado!")
+        print("ERROR: Você não está conectado(a) a parceiros no momento!")
     else:
-        print("Colegas conectados: ")
         while current is not None:
             if current.host != MY_IP:
                 print(count, "-", current.host)
@@ -87,19 +86,16 @@ def list_partners():
             current = current.next_partner
 
 def exit_group():
-    if input("Tem certeza que deseja sair do grupo (Insira 'Y' para confirmar)? ").upper() == 'Y':
-        file.log("info.log", "tentando remover meu ip")
-        partner = partnerDAO.get_me().next_partner
-        if partner is None:
-            print("Não há outros parceiros associados ao seu grupo!")
-            return
-        
-        if forward_message_to_active_member(partner, {'code': 'Zx02', "host_to_remove": MY_IP}):
-            TimeHelper.regressive_counter(4)
-            partnerDAO.reset()
-            data_service.backup_data()
-            print("Solicitação de desconexão enviada com sucesso!")
-        else:
-            print("Falha ao tentar desconectar-se do grupo! Tente novamente mais tarde.")
+    file.log("info.log", "tentando remover meu ip")
+    partner = partnerDAO.get_me().next_partner
+    if partner is None:
+        print("ERROR: Você não está conectado(a) a parceiros no momento!")
+        return
+    
+    if forward_message_to_active_member(partner, {'code': 'Zx02', "host_to_remove": MY_IP}):
+        TimeHelper.regressive_counter(2)
+        partnerDAO.reset()
+        data_service.backup_data()
+        print("INFO: Solicitação de retirada do grupo enviada!")
     else:
-        print("Operação cancelada!")
+        print("ERROR: Não foi possível enviar a solicitação de saída do grupo!")

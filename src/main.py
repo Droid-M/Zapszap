@@ -36,11 +36,14 @@ if __name__ == '__main__':
     messages_terminal = Process(target=message_service.render_messages, args=(variables.INTERPROC_MESSAGES,))
     messages_terminal.start()
 
-    data_svc.set_username(sys.argv[1])
-    content = None
-    if (len(sys.argv) > 3):
-        content = sys.argv[3]
-    main_menu.run(sys.argv[2], content)
+    if data_svc.check_username(sys.argv[1]):
+        data_svc.set_username(sys.argv[1])
+        content = None
+        if (len(sys.argv) > 3):
+            content = sys.argv[3]
+        main_menu.run(sys.argv[2], content)
+    else:
+        print("ERROR: Nome de usuário informado não corresponde ao usuário conectado! Se deseja usar outro username, primeiro saia do grupo atual.")
     
     # Permite que subthreads parem:
     server.stop()

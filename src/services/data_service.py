@@ -57,14 +57,14 @@ def sync_data():
     if partner:
         socket.send_message_to_online_partner(partner, {'code': 'Zx01', "new_partner_host": MY_IP})
         time.sleep(3)
-        print(".")
         messages = key.encrypt_message(json.dumps(messageDAO.to_list_of_dicts()), partner.public_key)
         socket.send_message_to_online_partner(partner, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP,  'messages_list': messages, "sender": partnerDAO.get_me().name})
         time.sleep(3)
-        print(".")
-    
-    print("Dados sincronizados com sucesso!")
 
 def set_username(name: str):
     partnerDAO.get_me().name = name
     backup_data()
+    
+def check_username(name: str):
+    me = partnerDAO.get_me()
+    return (str(me.name) == '') or name == me.name

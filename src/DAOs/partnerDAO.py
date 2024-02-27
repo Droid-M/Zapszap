@@ -51,7 +51,14 @@ def to_dict():
     return partners
 
 def from_dict(data: dict) -> variables.Partner:
-    partner_instance = variables.Partner(data.get('host'), data.get('port'), data.get('socket'), data.get("public_key"))
+    partner_instance = variables.Partner(
+        data.get('host'), 
+        data.get('port'), 
+        data.get('socket'), 
+        data.get("public_key"),
+        False,
+        data.get("name")
+    )
 
     # Define outros atributos conforme necessário
     partner_instance.has_disconnected = data.get('has_disconnected', False)
@@ -115,6 +122,7 @@ def reset():
     me = get_me()
     me.next_partner = None
     me.is_offline - False
+    me.name = ''
     variables.FIRST_PARTNER = me
     variables.FIRST_PART_REFERENCE[0] = me
     variables.PARTNERS = {me.host: variables.FIRST_PARTNER}

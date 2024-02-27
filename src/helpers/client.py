@@ -1,5 +1,5 @@
 import socket
-from helpers import socket as CustomSocket
+from helpers import socket as CustomSocket, file
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
@@ -72,7 +72,7 @@ def connect_to_server(host, port: int):
 def disconnect_client(client_socket, quiet = True):
     client_socket.close()
     if not quiet:
-        print("Cliente desconectado.")
+        print("ERROR: Cliente desconectado.")
 
 # def get_local_ip():
 #     host_name = socket.gethostname()
@@ -102,7 +102,7 @@ def get_local_ip():
         ip_address = ip_addresses[0]['addr'] if ip_addresses else None
         return ip_address
     except (KeyError, ValueError):
-        print("Erro ao obter o endereço IP da interface padrão na sua máquina.")
+        file.log("error.log", "Erro ao obter o endereço IP da interface padrão na sua máquina.")
         return None
     
     
