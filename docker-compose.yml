@@ -10,8 +10,7 @@ services:
     - ./src/backups:/app/backups
     - ./src/logs:/app/logs
     networks:
-      zap_network:
-        ipv4_address: 172.19.0.4  # Endereço IP único para este contêiner
+      - zap_network
     ports:
       - "8050:8050/udp"  # Mapeamento da porta UDP
     environment:
@@ -20,8 +19,5 @@ services:
 
 networks:
   zap_network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.19.0.0/24
+    external: true
+    name: host
