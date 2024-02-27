@@ -9,7 +9,7 @@ from DAOs import partnerDAO
 
 DEFAULT_TIMEOUT = 1.5
 
-def receive_json_message(data) -> dict[str, any]:
+def receive_json_message(data):
     if not data:
         return None
     try:

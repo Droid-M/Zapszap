@@ -54,7 +54,7 @@ def to_list_of_dicts():
         messages.append(message.to_dict())
     return messages
 
-def from_list_of_dicts(json_data) -> list[Message]:
+def from_list_of_dicts(json_data):
     messages = []
     for message_data in json_data:
         host = message_data.get("host", "")
