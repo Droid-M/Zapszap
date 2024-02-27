@@ -59,13 +59,12 @@ def stop():
     if server_socket:
         file.create_file('stop.z', '', True)
         file.log(LOG_FILE_NAME, "Parando servidor...")
-        time.sleep(1)
         try:
-            server_socket.sendto(b"", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
+            server_socket.sendto(b"0", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
             pass
         except OSError as e:
             print(f"ERROR: Erro ao enviar dados: {e}")
-        time.sleep(0.2)
+        time.sleep(1)
         disconnect_server()
         file.log(LOG_FILE_NAME, "Servidor parado.")
     else:
