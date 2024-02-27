@@ -1,12 +1,25 @@
 #!/bin/bash
 
-# Verifica se o número de argumentos está correto
-if [ $# -lt 2 ]; then
-    echo "Uso: $0 <destinatario> <comando> [mensagem]"
-    exit 1
-fi
+# Função para exibir a lista de comandos
+exibir_ajuda() {
+    echo "Lista de comandos:"
+    echo "  <user> read-message"
+    echo "  <user> send-message <message>"
+    echo "  <user> connect <partner-ip>"
+    echo "  <user> list-partners"
+    echo "  <user> exit-group"
+    echo "  <user> restart"
+}
 
-# Executa o comando de acordo com os argumentos fornecidos
+# Verifica se o número de argumentos está correto
+if [ "$#" -lt 2 ]; then
+    if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+        exibir_ajuda
+    else
+        echo "Uso: $0 <usuário> <comando> [mensagem]"
+        exit 1
+    fi
+fi
 
 # Executa o programa principal com os parâmetros fornecidos
 python3 ./src/main.py "$@"

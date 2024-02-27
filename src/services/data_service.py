@@ -64,3 +64,7 @@ def sync_data():
         print(".")
     
     print("Dados sincronizados com sucesso!")
+
+def set_username(name: str):
+    partnerDAO.get_me().name = name
+    backup_data()
