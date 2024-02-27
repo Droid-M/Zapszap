@@ -28,11 +28,6 @@ if __name__ == '__main__':
     # Permite que subthreads iniciem:
     file.delete_file('stop.z', True)
 
-    manager = Manager()
-    variables.INTERPROC_MESSAGES = manager.Queue()
-    messages_terminal = Process(target=message_service.render_messages, args=(variables.INTERPROC_MESSAGES,))
-    messages_terminal.start()
-
     main_menu.show()
     # Permite que subthreads parem:
     server.stop()
