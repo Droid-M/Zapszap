@@ -10,4 +10,4 @@ confirmar_execucao() {
 
 confirmar_execucao
 
-sudo python3 ./src/main.py
+python3 ./src/main.py

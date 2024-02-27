@@ -12,4 +12,4 @@ confirmar_execucao
 
 ./remove_files.sh
 
-sudo python3 ./src/main.py
+python3 ./src/main.py
