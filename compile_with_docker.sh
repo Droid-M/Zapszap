@@ -4,4 +4,4 @@
 pip install 'urllib3<2'
 ./remove_files.sh
 docker build -t app .
-docker run --rm --network host app
+echo "Minha entrada" | docker run --rm --network host -i app

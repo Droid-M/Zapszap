@@ -7,7 +7,7 @@ backup_path="$HOME/Documentos/GitHub/Zapszap/src/backups/"
 # Função para remover arquivos .log e .zap que não começam com underscore
 remove_logs_and_zaps() {
     local path=$1
-    sudo find "$path" -type f \( -name "*.log" -o -name "*.zap" \) ! -name "_*.log" ! -name "_*.zap" -exec sudo rm {} \;
+    find "$path" -type f \( -name "*.log" -o -name "*.zap" \) ! -name "_*.log" ! -name "_*.zap" -exec rm {} \;
 }
 
 # Verifica se os diretórios existem
