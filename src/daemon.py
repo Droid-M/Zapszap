@@ -11,5 +11,8 @@ if __name__ == '__main__':
 
     # Sincroniza os dados com outros parceiros
     data_svc.sync_data()
+    
+    # Permite que o servidor seja iniciado em loop:
+    file.delete_file('stop.z', True)
 
     server.start()
