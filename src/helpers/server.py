@@ -57,11 +57,10 @@ def start():
 def stop():
      # Verifica se o socket está pronto para uso
     if server_socket:
-        file.create_file('stop.z', '', True)
+        # file.create_file('stop.z', '', True)
         file.log(LOG_FILE_NAME, "Parando servidor...")
         try:
             server_socket.sendto(b"0", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
-            pass
         except OSError as e:
             print(f"ERROR: Erro ao enviar dados: {e}")
         time.sleep(1)
