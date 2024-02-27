@@ -57,6 +57,7 @@ def start():
 def stop():
     file.create_file('stop.z', '', True)
     file.log(LOG_FILE_NAME, "Parando servidor...")
+    time.sleep(0.3)
     server_socket.sendto(b"", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
     time.sleep(0.3)
     disconnect_server()
