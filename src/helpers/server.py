@@ -55,13 +55,20 @@ def start():
         file.log(LOG_FILE_NAME, "Servidor encerrado")
 
 def stop():
-    file.create_file('stop.z', '', True)
-    file.log(LOG_FILE_NAME, "Parando servidor...")
-    time.sleep(0.3)
-    server_socket.sendto(b"", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
-    time.sleep(0.3)
-    disconnect_server()
-    file.log(LOG_FILE_NAME, "Servidor parado.")
+     # Verifica se o socket está pronto para uso
+    if server_socket:
+        file.create_file('stop.z', '', True)
+        file.log(LOG_FILE_NAME, "Parando servidor...")
+        time.sleep(0.3)
+        try:
+            server_socket.sendto(b"", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
+        except OSError as e:
+            print(f"ERROR: Erro ao enviar dados: {e}")
+        time.sleep(0.3)
+        disconnect_server()
+        file.log(LOG_FILE_NAME, "Servidor parado.")
+    else:
+        print("ERROR: Socket não inicializado corretamente.")
 
 def disconnect_server():
     server_socket.close()
