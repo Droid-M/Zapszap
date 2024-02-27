@@ -61,7 +61,8 @@ def stop():
         file.log(LOG_FILE_NAME, "Parando servidor...")
         time.sleep(0.3)
         try:
-            server_socket.sendto(b"", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
+            # server_socket.sendto(b"", (HOST, PORT))  # Envia um datagrama vazio para desbloquear o recvfrom
+            pass
         except OSError as e:
             print(f"ERROR: Erro ao enviar dados: {e}")
         time.sleep(0.3)
