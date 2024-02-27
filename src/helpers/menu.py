@@ -1,14 +1,11 @@
 import os
 import sys
 import subprocess
-from datetime import datetime
-from helpers import server
 
 def restart():
     """Reinicia a aplicação"""
     if input("Tem certeza que deseja reiniciar o programa (Insira 'Y' para confirmar)? ").upper() == 'Y':
         print("INFO: Reiniciando programa...")
-        server.stop()
         if os.name == 'nt':
             # Se estiver no Windows, use CREATE_NEW_CONSOLE para executar em um novo terminal CMD
             command = [sys.executable] + sys.argv

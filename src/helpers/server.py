@@ -43,6 +43,7 @@ def replies_client(client_ip: str, timestamp: str, successful: bool):
 
 def start():
     try:
+        print(f"Servidor iniciado. Aguardando mensagens em {HOST}:{PORT}...")
         file.log(LOG_FILE_NAME, f"Servidor iniciado. Aguardando mensagens em {HOST}:{PORT}...")
         while not file.file_exists('stop.z'):
             file.log(LOG_FILE_NAME, "Aguardando mensagens...")
