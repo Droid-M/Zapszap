@@ -13,6 +13,7 @@ FIRST_PARTNER_BACKUP_FILE = 'first_p.zap'
 
 # Função para fazer backup dos dados
 def backup_data():
+    
     file.write_backup_file(MESSAGE_BACKUP_FILE, messageDAO.to_json())
     file.write_backup_file(PARTNERS_BACKUP_FILE, partnerDAO.to_json())
     file.write_backup_file(FIRST_PARTNER_BACKUP_FILE, variables.FIRST_PARTNER.to_json())
@@ -53,6 +54,8 @@ def restore_data():
 def sync_data():
     partner = partnerDAO.get_my_next_partner()
     
+    print("\nSincronizando dados, aguarde...")
+    
     # Enviando mensagens de sincronização, se houver um parceiro válido
     if partner:
         socket.send_message_to_online_partner(partner, {'code': 'Zx01', "new_partner_host": MY_IP})
@@ -60,6 +63,8 @@ def sync_data():
         messages = key.encrypt_message(json.dumps(messageDAO.to_list_of_dicts()), partner.public_key)
         socket.send_message_to_online_partner(partner, {'code': 'Zx11', 'merge_messages': 1, "from": MY_IP,  'messages_list': messages, "sender": partnerDAO.get_me().name})
         time.sleep(3)
+        
+    print("\nSincronização de dados completa!")
 
 def set_username(name: str):
     partnerDAO.get_me().name = name
