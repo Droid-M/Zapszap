@@ -17,6 +17,7 @@ def handle_request(message, client_address):
     client_ip = client_address[0]
     try:
         message = CustomSocket.receive_json_message(message)
+        print(f"Conexão estabelecida com {client_ip}")
         file.log(LOG_FILE_NAME, f"Mensagem recebida de {client_ip}: ")
         file.log(LOG_FILE_NAME, json.dumps(message))
         if message:
@@ -43,7 +44,7 @@ def replies_client(client_ip: str, timestamp: str, successful: bool):
 
 def start():
     try:
-        print(f"Servidor iniciado. Aguardando mensagens em {HOST}:{PORT}...")
+        print(f"\n\n\nServidor iniciado. Aguardando mensagens em {HOST}:{PORT}...")
         file.log(LOG_FILE_NAME, f"Servidor iniciado. Aguardando mensagens em {HOST}:{PORT}...")
         while not file.file_exists('stop.z'):
             file.log(LOG_FILE_NAME, "Aguardando mensagens...")
